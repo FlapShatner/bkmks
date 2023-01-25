@@ -1,0 +1,17 @@
+{
+    "manifest_version": 3,
+    "name": "BKMKS",
+    "version": "1.0.0",
+    "action": { "default_popup": "popup.html"},
+    
+    "background": {
+      "service_worker": "src/extension/background.js",
+      "type": "module"
+    },    
+    "permissions": ["tabs", "bookmarks", "activeTab"],
+    "icons": {
+      "16": "img/bookmark.png",
+      "32": "img/bookmark.png",
+      "128": "img/bookmark.png"
+    }
+  }
