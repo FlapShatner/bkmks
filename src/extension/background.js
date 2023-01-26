@@ -1,11 +1,14 @@
 chrome.runtime.onMessage.addListener(
-   function(message, sender, sendResponse){
-    console.log(message);
-    if(message.data == "newTab"){
-    chrome.tabs.create({url:"index.html/full"})
-    sendResponse({data: "success"});
-    
+   async function(request, sender, sendResponse){
+    console.log(request.action)
+    if(request.action === "getRecent"){
+    const  data = await chrome.bookmarks.getRecent(20)
+    console.log(data)
+        sendResponse({data: data}, (response) => {
+         console.log(response)
+        })
    }
+   
    }
 );
 
