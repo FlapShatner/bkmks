@@ -3,54 +3,48 @@ import s from './App.module.css'
 import Window from './components/Window/Window'
 import Sidebar from './components/Sidebar/Sidebar'
 
-
 function App() {
   const [bookmarks, setBookmarks] = useState([])
   const [folderId, setFolderId] = useState('1')
-  const [curFolder, setCurFolder] = useState({})
-  const [curChildren, setCurChildren] = useState([])
+  const [subTree, setSubTree] = useState([])
+
   useEffect(() => {
-    chrome.bookmarks.getTree((bookmarks) => {      
+    chrome.bookmarks.getTree((bookmarks) => {
       setBookmarks(bookmarks[0].children)
     })
+    
   }, [])
-  console.log("bookmarks: ", bookmarks)
 
-  function getBookmark(id) {
-    chrome.bookmarks.get(id, (bookmark) => {      
-      setCurFolder(bookmark)
+  function getSubTree(id) {
+    chrome.bookmarks.getSubTree(id, (subTree) => {
+      setSubTree(subTree[0])
     })
+    console.log('subTree: ', subTree)
   }
-
-  function getChildren(id) {
-    chrome.bookmarks.getChildren(id, (children) => {
-      setCurChildren(children)
-    })
-  }
-
-  
-
 
   useEffect(() => {
-    
-    getBookmark(folderId)
-    getChildren(folderId)    
-    console.log("curFolder: ", curFolder)
-  },[folderId])
+    getSubTree(folderId)
+  }, [folderId])
 
-  async function onFolderClick(id) {
-    console.log("id: ", id)
-   setFolderId(id)
+  function onFolderClick(id) {
+    setFolderId(id)
   }
-  
 
+  function addHasFolders(bookmarks) {
+    bookmarks.forEach((bookmark) => {
+      bookmark.children && bookmark.children.some((child) => child.children) ? (bookmark.hasFolders = true) : (bookmark.hasFolders = false)
+      bookmark.children && addHasFolders(bookmark.children)
+    })
+  }
 
+  useEffect(() => {
+    addHasFolders(bookmarks)
+  }, [bookmarks])
 
   return (
     <div className={s.container}>
-    
       <Sidebar onFolderClick={(id) => onFolderClick(id)} bookmarks={bookmarks} />
-       <Window curChildren={curChildren} curFolder={curFolder} />
+      <Window subTree={subTree} />
     </div>
   )
 }
