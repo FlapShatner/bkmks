@@ -1,1 +1,0 @@
-import{c as o,j as t,R as c,A as r}from"./index.3ce94c94.js";const e=document.createElement("div");e.id="crx-root";document.body.append(e);o.createRoot(document.getElementById("root")).render(t(c.StrictMode,{children:t(r,{})}),e);

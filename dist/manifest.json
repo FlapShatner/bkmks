@@ -2,8 +2,11 @@
   "manifest_version": 3,
   "name": "BKMKS",
   "version": "1.0.0",
+  "chrome_url_overrides": {
+    "bookmarks": "index.html"
+  },
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "public/popup.html"
   },
   "background": {
     "service_worker": "service-worker-loader.js",

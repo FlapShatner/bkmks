@@ -1,0 +1,1 @@
+chrome.runtime.onMessage.addListener(async function(o,c,n){if(console.log(o.action),o.action==="getRecent"){const e=await chrome.bookmarks.getRecent(20);console.log(e),n({data:e},a=>{console.log(a)})}});

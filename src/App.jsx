@@ -7,7 +7,7 @@ import Sidebar from './components/Sidebar/Sidebar'
 function App() {
   const [bookmarks, setBookmarks] = useState([])
   useEffect(() => {
-    chrome.bookmarks.getTree((bookmarks) => {
+    chrome.bookmarks.getTree((bookmarks) => {      
       setBookmarks(bookmarks[0].children)
     })
   }, [])
