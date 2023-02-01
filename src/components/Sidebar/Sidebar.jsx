@@ -14,6 +14,7 @@ function Folder({ bookmark, folderClick }) {
   function handleClick(e) {
     e.stopPropagation()
     folderClick(id)
+    setShow(!show)
   }
 
   return (
@@ -21,7 +22,7 @@ function Folder({ bookmark, folderClick }) {
       {children && (
         <div>
           <div className={s.title}>
-            {bookmark.hasFolders && <div onClick={() => setShow(!show)}>
+            {bookmark.hasFolders && <div onClick={folderClick}>
             <div className={s.caret}>
             {show ?            
             <AiFillCaretDown /> : <AiFillCaretRight />            

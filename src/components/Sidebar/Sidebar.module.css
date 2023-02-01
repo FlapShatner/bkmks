@@ -5,31 +5,30 @@
 .sidebar{       
     width:33%;
     min-width: 15rem;
-
+    
 }
 
-.sidebar h1{
-    width: 15rem;
-    padding: 1rem;
-    position: fixed;
-    background-color: white;
-}
 
 .list{
     max-height: calc(100vh - 3rem);
-    
     overflow: scroll;
     overflow-x: hidden;
+    padding:.5rem;
 }
 
 .folder{
-    padding-left: 2rem;
+    padding-left: 1rem;
 }
 
 .folder h2{
     margin: .25rem 0;
     font-size: .9rem;
     cursor: pointer;
+    transition: var(--transition);
+}
+
+.folder h2:hover{
+    color:var(--clr-primary-hover);
 }
 
 .folder .title{

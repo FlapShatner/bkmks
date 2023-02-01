@@ -1,17 +1,10 @@
 import s from './Window.module.css'
-import { useState, useEffect } from 'react'
+import { TbCaretRight,TbLink } from 'react-icons/tb'
+import {FaFolderOpen,FaFolder} from 'react-icons/fa'
+// import {IoLink} from 'react-icons/io5'
 
-function Window({ subTree, onFolderClick }) {
+function Window({ subTree, onFolderClick, parents }) {
   const { id, title, children, parentId } = subTree
-  const [prevFolder, setPrevFolder] = useState({})
-
-  useEffect(() => {
-  parentId && chrome.bookmarks.get(parentId, (parent) => {
-    setPrevFolder(parent[0])
-  })}, [parentId])
-
-  console.log('prevFolder: ', prevFolder)
-  
 
   if (!subTree.children) {
     return (
@@ -20,7 +13,6 @@ function Window({ subTree, onFolderClick }) {
       </div>
     )
   }
-
   const folders = children.filter((child) => child.children)
   const links = children.filter((child) => !child.children)
 
@@ -30,26 +22,33 @@ function Window({ subTree, onFolderClick }) {
 
   return (
     <div className={s.window}>
-      
       <div className={s.header}>
-        <h2>{title}</h2>
-
-      {prevFolder.id!== '0'&& <button onClick={() => handleClick(prevFolder.id)}>Back To {prevFolder.title}</button>}
-
-      </div>
-      {id != "1" && folders.length > 0 &&
-          folders.map((folder) => (
-            <div className={s.folder} key={folder.id}>
-              <h3 onClick={() => handleClick(folder.id)}>{folder.title}</h3>
+        <div className={s.crumbs}>
+          {parents.map((parent, i) => (
+            <div className={s.crumb}>
+              {i !== parents.length - 1 &&  <TbCaretRight /> }
+              <p onClick={() => handleClick(parent.id)} key={parent.id}>{parent.title}</p>
             </div>
           ))}
-        {links.map((child) => (
-          <div className={s.link} key={child.id}>
-            <a href={child.url}>{child.title}</a>
+        </div>
+        
+        
+        <h2><FaFolderOpen />{title}</h2>
+        
+      </div>
+      {id != '1' &&
+        folders.length > 0 &&
+        folders.map((folder) => (
+          <div className={s.folder} key={folder.id}>
+            <h3 onClick={() => handleClick(folder.id)}><FaFolder size=".75rem" /> {folder.title}</h3>
           </div>
         ))}
-        
-      
+      {links.map((child) => (
+        <div className={s.link} key={child.id}>
+       
+          <a href={child.url}> <TbLink /> {child.title} </a>
+        </div>
+      ))}
     </div>
   )
 }

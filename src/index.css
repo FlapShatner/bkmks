@@ -31,6 +31,8 @@ body {
   line-height: 1.5;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  background-color: #282c34;
+  color:var(--clr-primary);
 }
 
 img,
@@ -57,6 +59,15 @@ h4,
 h5,
 h6 {
   overflow-wrap: break-word;
+}
+
+:root{
+  --clr-primary:hsla(256, 70%, 79%, 0.9);
+  --clr-primary-hover:hsla(256, 38%, 90%, 1);
+  --clr-link-hover:hsla(65, 59%, 90%, 1);
+  --clr-link:hsla(65, 59%, 90%, .7);
+  --clr-red:hsla(360, 74%, 62%, .9);
+  --transition: all .1s ease-in-out;
 }
 
 #root,
