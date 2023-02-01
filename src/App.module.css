@@ -1,4 +1,8 @@
 .container{
     display: flex;
-    max-height: 100vh;
+    height: calc(100vh - 3rem);
+    width:auto;
+    max-width: 1400px;
+    margin: 0 auto;
 }
+

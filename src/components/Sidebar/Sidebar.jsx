@@ -46,7 +46,7 @@ function Sidebar({ bookmarks, onFolderClick }) {
 
   return (
     <div className={s.sidebar}>
-      <h1>BKMKS</h1>
+      
 
       <div className={s.list}>
         {bookmarks.map((bookmark) => {

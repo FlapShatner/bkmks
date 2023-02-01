@@ -2,22 +2,22 @@
     padding-left: 2rem;
 }
 
-.sidebar{
-    height: 100vh;    
+.sidebar{       
     width:33%;
     min-width: 15rem;
+
 }
 
 .sidebar h1{
-    width: 100%;
+    width: 15rem;
     padding: 1rem;
     position: fixed;
     background-color: white;
 }
 
 .list{
-    max-height: 90vh;
-    margin-top: 4rem;
+    max-height: calc(100vh - 3rem);
+    
     overflow: scroll;
     overflow-x: hidden;
 }
