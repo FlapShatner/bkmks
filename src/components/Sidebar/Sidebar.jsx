@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { BiSubdirectoryRight } from 'react-icons/bi'
 import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai'
 import s from './Sidebar.module.css'
 
@@ -23,7 +22,11 @@ function Folder({ bookmark, folderClick }) {
         <div>
           <div className={s.title}>
             {bookmark.hasFolders && <div onClick={() => setShow(!show)}>
-            {show ? <AiFillCaretDown /> : <AiFillCaretRight />}
+            <div className={s.caret}>
+            {show ?            
+            <AiFillCaretDown /> : <AiFillCaretRight />            
+            }
+            </div>
             </div>}
 
             <h2>{title}</h2>
@@ -39,16 +42,7 @@ function Folder({ bookmark, folderClick }) {
 }
 
 function Sidebar({ bookmarks, onFolderClick }) {
-  // function addHasFolders(bookmarks) {
-  //   bookmarks.forEach((bookmark) => {
-  //     bookmark.children && bookmark.children.some((child) => child.children) ? (bookmark.hasFolders = true) : (bookmark.hasFolders = false)
-  //     bookmark.children && addHasFolders(bookmark.children)
-  //   })
-  // }
-
-  // useEffect(() => {
-  //   addHasFolders(bookmarks)
-  // }, [bookmarks])
+ 
 
   return (
     <div className={s.sidebar}>

@@ -1,21 +1,44 @@
 import s from './Window.module.css'
+import { useState, useEffect } from 'react'
 
-function Window({subTree}) {
+function Window({ subTree, onFolderClick }) {
  
-  if(!subTree.children) {
+  
+  const { title, children, parentId } = subTree
+
+ 
+
+  
+
+  if (!subTree.children) {
     return (
-      <div><h2>Loading...</h2></div>
+      <div>
+        <h2>Loading...</h2>
+      </div>
     )
   }
-  const {title, children} = subTree
 
+  const folders = children.filter((child) => child.children)
+  const links = children.filter((child) => !child.children)
+
+  function handleClick(id) {
+    onFolderClick(id)
+  }
+  
   return (
     <div className={s.window}>
       <div className={s.bookmarks}>
+        
         <h2>{title}</h2>
-        {children.map((child) => (
-          <div className={s.bookmark} key={child.id}>
-            <div>{child.title}</div>
+        {folders.length > 0 &&
+          folders.map((folder) => (
+            <div className={s.folder} key={folder.id}>
+              <h3 onClick={() => handleClick(folder.id)}>{folder.title}</h3>
+            </div>
+          ))}
+        {links.map((child) => (
+          <div className={s.link} key={child.id}>
+            <a href={child.url}>{child.title}</a>
           </div>
         ))}
       </div>

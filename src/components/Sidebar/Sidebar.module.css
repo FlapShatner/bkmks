@@ -29,10 +29,22 @@
 .folder h2{
     margin: .25rem 0;
     font-size: .9rem;
+    cursor: pointer;
 }
 
 .folder .title{
     display: flex;
     align-items: center ;
 
+}
+
+.caret{
+    width:2rem;
+    height: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding-right: .5rem;
+    cursor: pointer;
+    margin-left: -2rem;
 }

@@ -2,11 +2,15 @@ import { useEffect, useState } from 'react'
 import s from './App.module.css'
 import Window from './components/Window/Window'
 import Sidebar from './components/Sidebar/Sidebar'
+import Breadcrumbs from './components/Breadcrumbs'
 
 function App() {
   const [bookmarks, setBookmarks] = useState([])
-  const [folderId, setFolderId] = useState('1')
+  const [folderId, setFolderId] = useState('1') 
   const [subTree, setSubTree] = useState([])
+  const [parents, setParents] = useState([])
+  const parentsArr = []
+  
 
   useEffect(() => {
     chrome.bookmarks.getTree((bookmarks) => {
@@ -24,10 +28,20 @@ function App() {
 
   useEffect(() => {
     getSubTree(folderId)
+    getParents(folderId)
   }, [folderId])
 
-  function onFolderClick(id) {
+  function getParents(id){
+    chrome.bookmarks.get(id, (parent) => {
+      parentsArr.push({id: parent[0].id, title: parent[0].title, parentId: parent[0].parentId})    
+      setParents(parentsArr) 
+      parent[0].parentId && getParents(parent[0].parentId)
+   })
+  }
+
+  function onFolderClick(id) {    
     setFolderId(id)
+    
   }
 
   function addHasFolders(bookmarks) {
@@ -44,7 +58,10 @@ function App() {
   return (
     <div className={s.container}>
       <Sidebar onFolderClick={(id) => onFolderClick(id)} bookmarks={bookmarks} />
-      <Window subTree={subTree} />
+      <div className={s.window}>
+      <Window onFolderClick={(id) => onFolderClick(id)}  subTree={subTree} />
+      <Breadcrumbs parents={parents} subTree={subTree} />
+      </div>
     </div>
   )
 }
