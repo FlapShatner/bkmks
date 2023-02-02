@@ -1,0 +1,43 @@
+.container{
+    display: flex;
+    flex-direction: column;    
+    padding:1rem;   
+}
+
+.wrapper{
+    position: absolute;
+    top: 10rem;
+    left: 3rem;
+    background-color: var(--clr-dark-alt);
+    z-index: 9;
+    color:var(--clr-primary-hover)   
+}
+
+.container h3{
+    text-align: center;
+    margin-bottom: .5rem;
+    font-weight: 500;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .25rem;
+}
+
+.btns{
+    display: flex;
+    gap: .5rem;
+    
+}
+
+.btns button{
+    background-color: transparent;
+    color: var(--clr-primary-hover);
+    border:none;
+    padding:.5rem 1rem ;
+    margin-top:.25rem ;
+}
+
+.btns button:hover{
+    background-color: var(--clr-dark);
+}

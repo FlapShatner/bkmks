@@ -1,24 +1,41 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useCallback } from 'react'
 import s from './App.module.css'
+import { useAtom} from 'jotai'
+import { bookmarksAtom, folderIdAtom, subTreeAtom, parentsAtom, updateIdAtom, clickedAtom, modalAtom, deleteConfirmAtom } from './state/atoms'
 import Window from './components/Window/Window'
 import Sidebar from './components/Sidebar/Sidebar'
 import Header from './components/Header'
 import FolderContext from './components/FolderContext'
-import useContextMenu from './hooks/useContextMenu'
+import DeleteConfirm from './components/DeleteConfirm'
 
-function App() {
-  const [bookmarks, setBookmarks] = useState([])
-  const [folderId, setFolderId] = useState('1')
-  const [subTree, setSubTree] = useState([])
-  const [parents, setParents] = useState([])
-  const[updateId, setUpdateId] = useState('')
- const { clicked, setClicked, points, setPoints } = useContextMenu()
+
+
+
+function App() { 
+
+  const [deleteConfirm, setDeleteConfirm] = useAtom(deleteConfirmAtom)
+  const [bookmarks, setBookmarks] = useAtom(bookmarksAtom)  
+  const [folderId] = useAtom(folderIdAtom)
+  const [, setSubTree] = useAtom(subTreeAtom)
+  const [, setParents] = useAtom(parentsAtom)
+  const[updateId] = useAtom(updateIdAtom)
+  const [clicked, setClicked] = useAtom(clickedAtom)
+  const [modalId, setModalId] = useAtom(modalAtom)
+
+  useEffect(() => {
+    const handleClick = () => setClicked(false);
+    document.addEventListener("click", handleClick);
+    return () => {
+      window.removeEventListener("click", handleClick);
+    };
+  }, []);
+
 
   const bookmarksCb = useCallback(() => {
     chrome.bookmarks.getTree((bookmarks) => {
       setBookmarks(bookmarks[0].children)
       addHasFolders(bookmarks[0].children)
-    })
+    })    
   })
 
   const subTreeCb = useCallback(() => {
@@ -41,7 +58,7 @@ function App() {
     return null
   })
 
-  // console.log("parentCb: ", parentCb(bookmarks, folderId))
+  
 
   useEffect(() => {
     bookmarksCb()
@@ -49,10 +66,7 @@ function App() {
     findParents(folderId)
   }, [folderId])
 
-  function onFolderClick(id) {
-    setFolderId(id)
-  }
-
+ 
   function addHasFolders(bookmarks) {
     bookmarks.forEach((bookmark) => {
       bookmark.children && bookmark.children.some((child) => child.children) ? (bookmark.hasFolders = true) : (bookmark.hasFolders = false)
@@ -74,14 +88,7 @@ function App() {
      setParents(parentsArr)
       findParents(parent.parentId)
     }    
-  }
-
-  function click(points){
-  setClicked(true)
-  setPoints({x: points.x, y: points.y})
-  setUpdateId(points.id.toString()) 
-  console.log("updateId: ", updateId)
-  }
+  } 
 
   function onDelete(){
     chrome.bookmarks.remove(updateId, () => {
@@ -95,10 +102,11 @@ function App() {
     <div className={s.main}>
       <Header />
       <div className={s.container}>
-        <Sidebar onFolderClick={(id) => onFolderClick(id)} bookmarks={bookmarks}  click={(points) => click(points)}/>
-        <Window onFolderClick={(id) => onFolderClick(id)} subTree={subTree} parents={parents} />
+        <Sidebar />
+        <Window  />
       </div>
-      {clicked && <FolderContext onDelete={onDelete} points={points} />}
+      {clicked && <FolderContext />}
+      {deleteConfirm && <DeleteConfirm  />}
     </div>
   )
 }
