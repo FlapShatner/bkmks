@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai'
+
 import s from './Sidebar.module.css'
 
-function Folder({ bookmark, folderClick }) {
+function Folder({ bookmark, folderClick, click }) {
   const [show, setShow] = useState(false)
   const { id, title, children } = bookmark
   useEffect(() => {
@@ -17,41 +18,42 @@ function Folder({ bookmark, folderClick }) {
     setShow(!show)
   }
 
-  return (
-    <div onClick={handleClick} id={id} className={s.folder}>
-      {children && (
-        <div>
-          <div className={s.title}>
-            {bookmark.hasFolders && <div onClick={folderClick}>
-            <div className={s.caret}>
-            {show ?            
-            <AiFillCaretDown /> : <AiFillCaretRight />            
-            }
-            </div>
-            </div>}
+  function onRightClick(e) {
+    e.preventDefault()
+    e.stopPropagation()
+    click({ x: e.clientX, y: e.clientY, id: e.currentTarget.id } )
+  }
 
-            <h2>{title}</h2>
+  return (
+    <div  className={s.folder}>
+      <div id={id} onContextMenu={onRightClick} onClick={handleClick} className={s.title}>
+        {bookmark.hasFolders && (
+          <div onClick={folderClick}>
+            <div className={s.caret}>{show ? <AiFillCaretDown /> : <AiFillCaretRight />}</div>
           </div>
-          {show &&
-            children.map((child) => {
-              return <Folder key={child.id} folderClick={folderClick} bookmark={child} />
-            })}
-        </div>
-      )}
+        )}
+
+        <h2>{title}</h2>
+      </div>
+      {show &&
+        children.map((child) => {
+          if (child.children) return <Folder key={child.id} click={click} folderClick={folderClick} bookmark={child} />
+        })}
     </div>
   )
 }
 
-function Sidebar({ bookmarks, onFolderClick }) {
- 
+function Sidebar({ bookmarks, onFolderClick, click }) {
 
   return (
     <div className={s.sidebar}>
-      
-
       <div className={s.list}>
         {bookmarks.map((bookmark) => {
-          return <Folder folderClick={onFolderClick} key={bookmark.id} bookmark={bookmark} />
+          if (bookmark.children) {
+            return <Folder folderClick={onFolderClick} key={bookmark.id} bookmark={bookmark} click={click} />
+          } else {
+            return
+          }
         })}
       </div>
     </div>

@@ -2,10 +2,10 @@
     padding-left: 2rem;
 }
 
-.sidebar{       
+.sidebar{
     width:33%;
     min-width: 15rem;
-    
+    border-top: 2px solid var(--clr-dark-alt);
 }
 
 
@@ -14,10 +14,12 @@
     overflow: scroll;
     overflow-x: hidden;
     padding:.5rem;
+    position: relative;
 }
 
 .folder{
     padding-left: 1rem;
+    width:max-content;
 }
 
 .folder h2{

@@ -1,7 +1,7 @@
 import s from './Window.module.css'
 import { TbCaretRight,TbLink } from 'react-icons/tb'
 import {FaFolderOpen,FaFolder} from 'react-icons/fa'
-// import {IoLink} from 'react-icons/io5'
+
 
 function Window({ subTree, onFolderClick, parents }) {
   const { id, title, children, parentId } = subTree
@@ -43,12 +43,14 @@ function Window({ subTree, onFolderClick, parents }) {
             <h3 onClick={() => handleClick(folder.id)}><FaFolder size=".75rem" /> {folder.title}</h3>
           </div>
         ))}
+        
       {links.map((child) => (
         <div className={s.link} key={child.id}>
        
           <a href={child.url}> <TbLink /> {child.title} </a>
         </div>
       ))}
+      
     </div>
   )
 }

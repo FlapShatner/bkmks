@@ -6,6 +6,7 @@
     height: calc(100vh - 3rem);    
     padding: 1rem 2rem;   
     overflow-y: scroll;
+    background: var(--gradient);
 }
 
 .folder{
@@ -41,6 +42,8 @@ color: var(--clr-primary-hover);
     gap:.25rem;
     transition: var(--transition);   
 }
+
+
 
 .link a:hover{
     color:var(--clr-link-hover)

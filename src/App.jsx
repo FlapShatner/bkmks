@@ -3,12 +3,16 @@ import s from './App.module.css'
 import Window from './components/Window/Window'
 import Sidebar from './components/Sidebar/Sidebar'
 import Header from './components/Header'
+import FolderContext from './components/FolderContext'
+import useContextMenu from './hooks/useContextMenu'
 
 function App() {
   const [bookmarks, setBookmarks] = useState([])
   const [folderId, setFolderId] = useState('1')
   const [subTree, setSubTree] = useState([])
   const [parents, setParents] = useState([])
+  const[updateId, setUpdateId] = useState('')
+ const { clicked, setClicked, points, setPoints } = useContextMenu()
 
   const bookmarksCb = useCallback(() => {
     chrome.bookmarks.getTree((bookmarks) => {
@@ -37,7 +41,7 @@ function App() {
     return null
   })
 
-  console.log("parentCb: ", parentCb(bookmarks, folderId))
+  // console.log("parentCb: ", parentCb(bookmarks, folderId))
 
   useEffect(() => {
     bookmarksCb()
@@ -69,21 +73,32 @@ function App() {
      parentsArr.push( { id: parent.id, title: parent.title })
      setParents(parentsArr)
       findParents(parent.parentId)
-    }
-    
+    }    
   }
 
-  console.log('parents: ', parents)
+  function click(points){
+  setClicked(true)
+  setPoints({x: points.x, y: points.y})
+  setUpdateId(points.id.toString()) 
+  console.log("updateId: ", updateId)
+  }
 
+  function onDelete(){
+    chrome.bookmarks.remove(updateId, () => {
+      setClicked(false)
+      bookmarksCb()
+      subTreeCb()
+    })
+  }
   
-
   return (
     <div className={s.main}>
       <Header />
       <div className={s.container}>
-        <Sidebar onFolderClick={(id) => onFolderClick(id)} bookmarks={bookmarks} />
+        <Sidebar onFolderClick={(id) => onFolderClick(id)} bookmarks={bookmarks}  click={(points) => click(points)}/>
         <Window onFolderClick={(id) => onFolderClick(id)} subTree={subTree} parents={parents} />
       </div>
+      {clicked && <FolderContext onDelete={onDelete} points={points} />}
     </div>
   )
 }

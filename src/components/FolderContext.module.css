@@ -1,0 +1,32 @@
+.container{
+    display: flex;
+    flex-direction: column;    
+    padding:.5rem .5rem;
+    
+     
+}
+
+.wrapper{
+    position: absolute;
+    padding:5px;
+    top: 10rem;
+    left: 3rem;
+    background-color: var(--clr-dark-alt);
+    z-index: 9;
+    color:var(--clr-primary-hover)   
+}
+
+.container span{
+    
+    font-size: .9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding:.5rem;
+    gap: .5rem;
+    transition: var(--transition);
+}
+
+.container span:hover{
+    background-color: var(--clr-dark);
+}
