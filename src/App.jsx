@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useRef } from 'react'
 import s from './App.module.css'
 import { useAtom} from 'jotai'
 import { bookmarksAtom, folderIdAtom, subTreeAtom, parentsAtom, updateIdAtom, clickedAtom, modalAtom, deleteConfirmAtom } from './state/atoms'
@@ -22,13 +22,21 @@ function App() {
   const [clicked, setClicked] = useAtom(clickedAtom)
   const [modalId, setModalId] = useAtom(modalAtom)
 
+  const ctxRef = useRef(null)
+
   useEffect(() => {
-    const handleClick = () => setClicked(false);
-    document.addEventListener("click", handleClick);
+    const handleClick = (e) => {
+      if(ctxRef.current && !ctxRef.current.contains(e.target)) {
+      setClicked(false)
+      if(deleteConfirm) {
+        setDeleteConfirm(false)
+      }}         
+    }   
+    window.addEventListener("click", handleClick);
     return () => {
-      window.removeEventListener("click", handleClick);
+     window.removeEventListener("click", handleClick);
     };
-  }, []);
+  }, [ctxRef, setClicked, deleteConfirm, setDeleteConfirm]);
 
 
   const bookmarksCb = useCallback(() => {
@@ -68,10 +76,20 @@ function App() {
 
  
   function addHasFolders(bookmarks) {
-    bookmarks.forEach((bookmark) => {
-      bookmark.children && bookmark.children.some((child) => child.children) ? (bookmark.hasFolders = true) : (bookmark.hasFolders = false)
-      bookmark.children && addHasFolders(bookmark.children)
-    })
+    try {
+      bookmarks.forEach((bookmark) => {
+        if (bookmark.children) {
+          if (bookmark.children.some((child) => child.children)) {
+            bookmark.hasFolders = true
+          } else {
+            bookmark.hasFolders = false
+          }
+          addHasFolders(bookmark.children)
+        }
+      })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   useEffect(() => {
@@ -91,12 +109,14 @@ function App() {
   } 
 
   function onDelete(){
-    chrome.bookmarks.remove(updateId, () => {
+    chrome.bookmarks.removeTree(updateId, () => {
       setClicked(false)
       bookmarksCb()
       subTreeCb()
     })
   }
+
+  
   
   return (
     <div className={s.main}>
@@ -105,8 +125,8 @@ function App() {
         <Sidebar />
         <Window  />
       </div>
-      {clicked && <FolderContext />}
-      {deleteConfirm && <DeleteConfirm  />}
+      {clicked && <FolderContext ref={ctxRef} />}
+      {deleteConfirm && <DeleteConfirm onDelete={onDelete} />}
     </div>
   )
 }

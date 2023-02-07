@@ -10,7 +10,8 @@
     left: 3rem;
     background-color: var(--clr-dark-alt);
     z-index: 9;
-    color:var(--clr-primary-hover)   
+    color:var(--clr-primary-hover);
+    border: 2px dashed var(--clr-red);   
 }
 
 .container h3{
@@ -22,6 +23,10 @@
     align-items: center;
     justify-content: center;
     gap: .25rem;
+}
+
+.container h3 div{
+    display: block;
 }
 
 .btns{
@@ -36,6 +41,7 @@
     border:none;
     padding:.5rem 1rem ;
     margin-top:.25rem ;
+    width: 50%;
 }
 
 .btns button:hover{
