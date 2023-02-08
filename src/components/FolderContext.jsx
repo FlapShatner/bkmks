@@ -20,6 +20,7 @@ const FolderContext = forwardRef(function FolderContext(props, ctxRef) {
   function handleRename(){
     setRename(true)
     setClicked(false)
+    
   }
 
   const display = deleteConfirm ? "none" : "block"
