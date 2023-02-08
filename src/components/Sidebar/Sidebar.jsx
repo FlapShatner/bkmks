@@ -1,17 +1,26 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai'
+import {BiCheckSquare, BiCheck} from 'react-icons/bi'
 import { atom, useAtom } from 'jotai'
-import { bookmarksAtom, folderIdAtom, clickedAtom, updateIdAtom, pointsAtom } from '../../state/atoms'
+import { bookmarksAtom, folderIdAtom, clickedAtom, updateIdAtom, pointsAtom, renameAtom, } from '../../state/atoms'
 
 import s from './Sidebar.module.css'
 
-function Folder({ bookmark }) {
+function Folder({ bookmark, onRename }) {
   const showAtom = useMemo(() => (bookmark.id === '1' ? atom(true) : atom(false)), [bookmark.id])
+  const newNameAtom = useMemo(() => atom(bookmark.title), [bookmark.title])
   const [show, setShow] = useAtom(showAtom)
   const [, setFolderId] = useAtom(folderIdAtom)
+  const [updateId] = useAtom(updateIdAtom)
   const [, setClicked] = useAtom(clickedAtom)
   const [, setUpdateId] = useAtom(updateIdAtom)
-  const [points, setPoints] = useAtom(pointsAtom)
+  const [, setPoints] = useAtom(pointsAtom)
+  const [rename, setRename] = useAtom(renameAtom)
+  const [newName, setNewName] = useAtom(newNameAtom)
+  
+  
+
+  
 
   const { id, title, children } = bookmark
 
@@ -26,9 +35,16 @@ function Folder({ bookmark }) {
     e.stopPropagation()
     setClicked(true)
     setUpdateId(e.currentTarget.id)
-    setPoints({ x: e.clientX, y: e.clientY })
-    console.log(points)
+    setPoints({ x: e.clientX, y: e.clientY })    
   }
+
+  function handleRename(e){
+    e.preventDefault()    
+    onRename(newName)
+    setRename(false)
+  }
+
+ const isRename = rename && updateId === id
 
   return (
     <div className={s.folder}>
@@ -38,25 +54,26 @@ function Folder({ bookmark }) {
             <div className={s.caret}>{show ? <AiFillCaretDown /> : <AiFillCaretRight />}</div>
           </div>
         )}
-
-        <h2>{title}</h2>
+          {isRename ? <form onSubmit={handleRename} className={s.rename}> <input onChange={(e) => setNewName(e.target.value)} autoFocus onBlur={() => setRename(false)} value={newName} type='text' /> 
+           <button type='submit'><BiCheck size={"2rem"} /> </button></form> :
+        <h2>{title}</h2>}
       </div>
       {show &&
         children.map((child) => {
-          if (child.children) return <Folder key={child.id} bookmark={child} />
+          if (child.children) return <Folder key={child.id} onRename={onRename} bookmark={child} />
         })}
     </div>
   )
 }
 
-function Sidebar() {
+function Sidebar({onRename}) {
   const [bookmarks] = useAtom(bookmarksAtom)
   return (
     <div className={s.sidebar}>
       <div className={s.list}>
         {bookmarks.map((bookmark) => {
           if (bookmark.children) {
-            return <Folder key={bookmark.id} bookmark={bookmark} />
+            return <Folder key={bookmark.id} onRename={onRename} bookmark={bookmark} />
           } else {
             return
           }

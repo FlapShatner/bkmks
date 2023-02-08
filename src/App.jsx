@@ -1,49 +1,45 @@
 import { useEffect, useCallback, useRef } from 'react'
 import s from './App.module.css'
-import { useAtom} from 'jotai'
-import { bookmarksAtom, folderIdAtom, subTreeAtom, parentsAtom, updateIdAtom, clickedAtom, modalAtom, deleteConfirmAtom } from './state/atoms'
+import { useAtom } from 'jotai'
+import { bookmarksAtom, folderIdAtom, subTreeAtom, parentsAtom, updateIdAtom, clickedAtom, deleteConfirmAtom} from './state/atoms'
 import Window from './components/Window/Window'
 import Sidebar from './components/Sidebar/Sidebar'
 import Header from './components/Header'
 import FolderContext from './components/FolderContext'
 import DeleteConfirm from './components/DeleteConfirm'
 
-
-
-
-function App() { 
-
+function App() {
   const [deleteConfirm, setDeleteConfirm] = useAtom(deleteConfirmAtom)
-  const [bookmarks, setBookmarks] = useAtom(bookmarksAtom)  
+  const [bookmarks, setBookmarks] = useAtom(bookmarksAtom)
   const [folderId] = useAtom(folderIdAtom)
   const [, setSubTree] = useAtom(subTreeAtom)
   const [, setParents] = useAtom(parentsAtom)
-  const[updateId] = useAtom(updateIdAtom)
+  const [updateId] = useAtom(updateIdAtom)
   const [clicked, setClicked] = useAtom(clickedAtom)
-  const [modalId, setModalId] = useAtom(modalAtom)
+
 
   const ctxRef = useRef(null)
 
   useEffect(() => {
     const handleClick = (e) => {
-      if(ctxRef.current && !ctxRef.current.contains(e.target)) {
-      setClicked(false)
-      if(deleteConfirm) {
-        setDeleteConfirm(false)
-      }}         
-    }   
-    window.addEventListener("click", handleClick);
+      if (ctxRef.current && !ctxRef.current.contains(e.target)) {
+        setClicked(false)
+        if (deleteConfirm) {
+          setDeleteConfirm(false)
+        }
+      }
+    }
+    window.addEventListener('click', handleClick)
     return () => {
-     window.removeEventListener("click", handleClick);
-    };
-  }, [ctxRef, setClicked, deleteConfirm, setDeleteConfirm]);
-
+      window.removeEventListener('click', handleClick)
+    }
+  }, [ctxRef, setClicked, deleteConfirm, setDeleteConfirm])
 
   const bookmarksCb = useCallback(() => {
     chrome.bookmarks.getTree((bookmarks) => {
       setBookmarks(bookmarks[0].children)
       addHasFolders(bookmarks[0].children)
-    })    
+    })
   })
 
   const subTreeCb = useCallback(() => {
@@ -66,15 +62,12 @@ function App() {
     return null
   })
 
-  
-
   useEffect(() => {
     bookmarksCb()
     subTreeCb()
     findParents(folderId)
   }, [folderId])
 
- 
   function addHasFolders(bookmarks) {
     try {
       bookmarks.forEach((bookmark) => {
@@ -96,19 +89,18 @@ function App() {
     addHasFolders(bookmarks)
   }, [bookmarks])
 
-
   const parentsArr = []
 
-  function findParents(id) {    
+  function findParents(id) {
     const parent = parentCb(bookmarks, id)
     if (parent?.id) {
-     parentsArr.push( { id: parent.id, title: parent.title })
-     setParents(parentsArr)
+      parentsArr.push({ id: parent.id, title: parent.title })
+      setParents(parentsArr)
       findParents(parent.parentId)
-    }    
-  } 
+    }
+  }
 
-  function onDelete(){
+  function onDelete() {
     chrome.bookmarks.removeTree(updateId, () => {
       setClicked(false)
       bookmarksCb()
@@ -116,16 +108,22 @@ function App() {
     })
   }
 
-  
-  
+  function onRename(newName) {
+    chrome.bookmarks.update(updateId, { title: newName }, () => {
+      setClicked(false)
+      bookmarksCb()
+      subTreeCb()
+    })
+  }
+
   return (
     <div className={s.main}>
       <Header />
       <div className={s.container}>
-        <Sidebar />
-        <Window  />
+        <Sidebar onRename={onRename} />
+        <Window />
       </div>
-      {clicked && <FolderContext ref={ctxRef} />}
+      {clicked && <FolderContext onRename={onRename} ref={ctxRef} />}
       {deleteConfirm && <DeleteConfirm onDelete={onDelete} />}
     </div>
   )

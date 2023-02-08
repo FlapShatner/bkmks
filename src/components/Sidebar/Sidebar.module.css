@@ -49,3 +49,27 @@
     cursor: pointer;
     margin-left: -2rem;
 }
+
+.rename{
+    display: flex;
+    gap: .125rem;
+}
+
+.rename button{
+    padding:0;    
+    margin:0 .25rem;
+    background-color: var(--clr-dark-alt);
+    color:var(--clr-primary-hover);
+    border:1px solid var(--clr-primary-hover);
+    cursor: pointer;
+}
+
+.rename input{
+    line-height: .75;
+    width:70%;
+    background-color: var(--clr-dark-alt);
+    border:none;
+    color: var(--clr-primary-hover);
+    font-size: .9rem;
+    padding:0 .25rem;
+}

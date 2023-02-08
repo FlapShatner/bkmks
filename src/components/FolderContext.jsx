@@ -3,17 +3,23 @@ import s from './FolderContext.module.css'
 import { TbEdit, TbTrash } from 'react-icons/tb'
 import { FaFolderOpen } from 'react-icons/fa'
 import { useAtom } from 'jotai'
-import { pointsAtom, folderIdAtom, updateIdAtom, deleteConfirmAtom, clickedAtom } from '../state/atoms'
+import { pointsAtom, folderIdAtom, updateIdAtom, deleteConfirmAtom, renameAtom, clickedAtom} from '../state/atoms'
 
 const FolderContext = forwardRef(function FolderContext(props, ctxRef) {
   const [points] = useAtom(pointsAtom)
-  const [ ,setClicked] = useAtom(clickedAtom)
+  const [rename, setRename] = useAtom(renameAtom)
   const [deleteConfirm, setDeleteConfirm] = useAtom(deleteConfirmAtom)
   const [, setFolderId] = useAtom(folderIdAtom)
   const [updateId] = useAtom(updateIdAtom)
+  const [clicked, setClicked] = useAtom(clickedAtom)
 
-  function handleClick(){
+  function handleDelete(){
     setDeleteConfirm(true)
+  }
+
+  function handleRename(){
+    setRename(true)
+    setClicked(false)
   }
 
   const display = deleteConfirm ? "none" : "block"
@@ -23,10 +29,10 @@ const FolderContext = forwardRef(function FolderContext(props, ctxRef) {
       <div style={{display: display}} className={s.container}>
         
           <div>
-            <span>
+            <span onClick={handleRename}>
               <TbEdit /> Rename
             </span>
-            <span onClick={handleClick}>
+            <span onClick={handleDelete}>
               <TbTrash /> Delete
             </span>
             <span className={s.rule}></span>
