@@ -1,8 +1,12 @@
-.container{
+.container {
     display: flex;
-    height: calc(100vh - 3rem);
-    width:auto;
-    max-width: 1400px;
+    justify-content: center;
+    width: auto;
     margin: 0 auto;
+
 }
 
+.main {
+    max-width: 1900px;
+    margin: 0 auto;
+}

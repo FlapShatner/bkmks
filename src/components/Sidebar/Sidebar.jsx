@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai'
-import {BiCheckSquare, BiCheck} from 'react-icons/bi'
+import { BiCheckSquare, BiCheck } from 'react-icons/bi'
 import { atom, useAtom } from 'jotai'
-import { bookmarksAtom, folderIdAtom, clickedAtom, updateIdAtom, pointsAtom, renameAtom, } from '../../state/atoms'
+import { bookmarksAtom, folderIdAtom, clickedAtom, updateIdAtom, pointsAtom, renameAtom } from '../../state/atoms'
 
 import s from './Sidebar.module.css'
 
@@ -17,16 +17,16 @@ function Folder({ bookmark, onRename }) {
   const [, setPoints] = useAtom(pointsAtom)
   const [rename, setRename] = useAtom(renameAtom)
   const [newName, setNewName] = useAtom(newNameAtom)
-  
-  
-
-  
 
   const { id, title, children } = bookmark
 
   function handleClick(e) {
     e.stopPropagation()
     setFolderId(id)
+  }
+
+  function handleCaretClick(e) {
+    e.stopPropagation()
     setShow(!show)
   }
 
@@ -35,28 +35,37 @@ function Folder({ bookmark, onRename }) {
     e.stopPropagation()
     setClicked(true)
     setUpdateId(e.currentTarget.id)
-    setPoints({ x: e.clientX, y: e.clientY })    
+    setPoints({ x: e.clientX, y: e.clientY })
   }
 
-  function handleRename(e){
-    e.preventDefault()    
+  function handleRename(e) {
+    e.preventDefault()
     onRename(newName)
     setRename(false)
   }
 
- const isRename = rename && updateId === id
+  const isRename = rename && updateId === id
 
   return (
     <div className={s.folder}>
       <div id={id} onContextMenu={onRightClick} onClick={handleClick} className={s.title}>
         {bookmark.hasFolders && (
           <div>
-            <div className={s.caret}>{show ? <AiFillCaretDown /> : <AiFillCaretRight />}</div>
+            <div onClick={handleCaretClick} className={s.caret}>
+              {show ? <AiFillCaretDown /> : <AiFillCaretRight />}
+            </div>
           </div>
         )}
-          {isRename ? <form onSubmit={handleRename} className={s.rename}> <input onChange={(e) => setNewName(e.target.value)} autoFocus onBlur={() => setRename(false)} value={newName} type='text' /> 
-           <button type='submit'><BiCheck size={"2rem"} /> </button></form> :
-        <h2>{title}</h2>}
+        {isRename ? (
+          <form onSubmit={handleRename} className={s.rename}>
+            <input onChange={(e) => setNewName(e.target.value)} onBlur={() => setRename(false)} value={newName} type='text' />
+            <button type='submit'>
+              <BiCheck size={'2rem'} />{' '}
+            </button>
+          </form>
+        ) : (
+          <h2>{title}</h2>
+        )}
       </div>
       {show &&
         children.map((child) => {
@@ -66,10 +75,14 @@ function Folder({ bookmark, onRename }) {
   )
 }
 
-function Sidebar({onRename}) {
+function Sidebar({ onRename }) {
   const [bookmarks] = useAtom(bookmarksAtom)
+
   return (
     <div className={s.sidebar}>
+      <div className={s.logo}>
+        <h1>BKMKS</h1>
+      </div>
       <div className={s.list}>
         {bookmarks.map((bookmark) => {
           if (bookmark.children) {

@@ -1,7 +1,7 @@
 import { useEffect, useCallback, useRef } from 'react'
 import s from './App.module.css'
 import { useAtom } from 'jotai'
-import { bookmarksAtom, folderIdAtom, subTreeAtom, parentsAtom, updateIdAtom, clickedAtom, deleteConfirmAtom} from './state/atoms'
+import { bookmarksAtom, folderIdAtom, subTreeAtom, parentsAtom, updateIdAtom, clickedAtom, deleteConfirmAtom } from './state/atoms'
 import Window from './components/Window/Window'
 import Sidebar from './components/Sidebar/Sidebar'
 import Header from './components/Header'
@@ -16,7 +16,6 @@ function App() {
   const [, setParents] = useAtom(parentsAtom)
   const [updateId] = useAtom(updateIdAtom)
   const [clicked, setClicked] = useAtom(clickedAtom)
-
 
   const ctxRef = useRef(null)
 
@@ -118,10 +117,10 @@ function App() {
 
   return (
     <div className={s.main}>
-      <Header />
+      {/* <Header /> */}
       <div className={s.container}>
         <Sidebar onRename={onRename} />
-        <Window />
+        <Window onRename={onRename} />
       </div>
       {clicked && <FolderContext onRename={onRename} ref={ctxRef} />}
       {deleteConfirm && <DeleteConfirm onDelete={onDelete} />}
