@@ -48,7 +48,7 @@ function Window() {
   }
 
   function handleClick(id) {
-    setFolderId(id)
+    !drag && setFolderId(id)
   }
 
   function apiMove(id, newIndex, parentId) {
@@ -108,7 +108,7 @@ function Window() {
                   return (
                     <Item key={item} id={item} parentId={child.parentId}>
                       <div className={`${s.link} ${drag && s.outline}`}>
-                        <a>
+                        <a href={!drag && child.url}>
                           <div className={`${s.icon} ${drag && s.wide}`}>
                             {drag && <MdDragIndicator size='1rem' color='var(--clr-primary-hover)' />}
                             <TbLink />
@@ -122,7 +122,7 @@ function Window() {
                   return (
                     <Item id={item} key={item}>
                       <div className={`${s.folder} ${drag && s.outline}`}>
-                        <h3 onContextMenu={(e) => onFolderContext(e, child.id)}>
+                        <h3 onContextMenu={(e) => onFolderContext(e, child.id)} onClick={() => handleClick(child.id)}>
                           <div className={`${s.icon} ${drag && s.wide}`}>
                             {drag && <MdDragIndicator size='1rem' color='var(--clr-primary-hover)' />}
                             <FaFolder size='.75rem' />
