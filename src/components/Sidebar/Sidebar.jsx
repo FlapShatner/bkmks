@@ -48,7 +48,7 @@ function Folder({ bookmark, onRename }) {
 
   return (
     <div className={s.folder}>
-      <div id={id} onContextMenu={onRightClick} onClick={handleClick} className={s.title}>
+      <div id={id} onContextMenu={onRightClick} onClick={!isRename && handleClick} className={s.title}>
         {bookmark.hasFolders && (
           <div>
             <div onClick={handleCaretClick} className={s.caret}>
@@ -58,9 +58,9 @@ function Folder({ bookmark, onRename }) {
         )}
         {isRename ? (
           <form onSubmit={handleRename} className={s.rename}>
-            <input onChange={(e) => setNewName(e.target.value)} onBlur={() => setRename(false)} value={newName} type='text' />
+            <input autoFocus onChange={(e) => setNewName(e.target.value)} onBlur={() => setRename(false)} value={newName} type='text' />
             <button type='submit'>
-              <BiCheck size={'2rem'} />{' '}
+              <BiCheck size={'2rem'} />
             </button>
           </form>
         ) : (

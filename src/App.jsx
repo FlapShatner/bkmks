@@ -27,10 +27,11 @@ function App() {
           setDeleteConfirm(false)
         }
       }
+      console.log(e.target)
     }
-    window.addEventListener('click', handleClick)
+    document.addEventListener('click', handleClick, true)
     return () => {
-      window.removeEventListener('click', handleClick)
+      document.removeEventListener('click', handleClick, true)
     }
   }, [ctxRef, setClicked, deleteConfirm, setDeleteConfirm])
 

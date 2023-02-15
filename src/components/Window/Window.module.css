@@ -13,10 +13,11 @@
 .folder {
     width: 100%;
     display: flex;
+    margin-bottom: .5rem;
 }
 
 .folder h3 {
-    margin-bottom: .5rem;
+
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -108,4 +109,40 @@
 
 .crumb p:active {
     color: var(--clr-red)
+}
+
+.titleBar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.titleBar button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .25rem;
+    background-color: var(--clr-dark-alt);
+    height: 1.5rem;
+    color: var(--clr-primary-hover);
+    border: 1px solid var(--clr-primary-hover);
+}
+
+.icon {
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    min-width: 1rem;
+}
+
+.outline {
+    border: 1px solid var(--clr-primary-hover-60);
+}
+
+.opacity {
+    opacity: .7;
+}
+
+.wide {
+    min-width: 2rem;
 }
