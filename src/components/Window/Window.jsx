@@ -9,6 +9,7 @@ import { FaFolderOpen, FaFolder } from 'react-icons/fa'
 import { useAtom } from 'jotai'
 import { folderIdAtom, subTreeAtom, parentsAtom, clickedAtom, updateIdAtom, pointsAtom, bmArrayAtom, dragAtom, isFolderAtom } from '../../state/atoms'
 
+import Test from '../Test'
 import Item from '../Item'
 import { useEffect } from 'react'
 
@@ -90,6 +91,7 @@ function Window({ bookmarksCb }) {
             </div>
           ))}
         </div>
+        <Test />
         <div className={s.titleBar}>
           <h2
             onContextMenu={(e) => {
@@ -112,6 +114,9 @@ function Window({ bookmarksCb }) {
               const child = children.find((child) => child.id === item)
               if (child != undefined) {
                 if (!child.children) {
+                  {
+                    /* Link */
+                  }
                   const folder = false
                   return (
                     <Item key={item} id={item} parentId={child.parentId}>
@@ -127,6 +132,9 @@ function Window({ bookmarksCb }) {
                     </Item>
                   )
                 } else {
+                  {
+                    /* Folder */
+                  }
                   const folder = true
                   return (
                     <Item id={item} key={item}>

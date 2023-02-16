@@ -1,7 +1,8 @@
 import { forwardRef, useEffect, useMemo } from 'react'
 import s from './Context.module.css'
-import { TbEdit, TbTrash, TbExternalLink } from 'react-icons/tb'
+import { TbEdit, TbTrash, TbExternalLink, TbCopy } from 'react-icons/tb'
 import { FaFolderOpen } from 'react-icons/fa'
+import { RiSpyLine } from 'react-icons/ri'
 import { useAtom } from 'jotai'
 import { pointsAtom, folderIdAtom, updateIdAtom, deleteConfirmAtom, renameAtom, clickedAtom, isFolderAtom, editAtom, currentAtom } from '../state/atoms'
 
@@ -42,10 +43,21 @@ const Context = forwardRef(function Context({ onEdit }, ctxRef) {
     onEdit({ title: current.title, url: current.url })
   }
 
-  function navigate() {
+  function copyUrl() {
+    navigator.clipboard.writeText(current.url)
+    setClicked(false)
+  }
+
+  function navigate(type) {
     chrome.bookmarks.get(updateId, (bookmark) => {
       if (bookmark[0].url) {
-        chrome.tabs.create({ url: bookmark[0].url })
+        if (type == 'tab') {
+          chrome.tabs.create({ url: bookmark[0].url, active: false })
+        } else if (type == 'window') {
+          chrome.windows.create({ url: bookmark[0].url, focused: true })
+        } else if (type == 'incognito') {
+          chrome.windows.create({ url: bookmark[0].url, focused: true, incognito: true })
+        }
       }
       setClicked(false)
     })
@@ -64,7 +76,7 @@ const Context = forwardRef(function Context({ onEdit }, ctxRef) {
               </span>
             ) : (
               <span onClick={() => setEdit(true)}>
-                <TbEdit /> Edit
+                <TbEdit /> Edit info
               </span>
             )}
 
@@ -77,9 +89,21 @@ const Context = forwardRef(function Context({ onEdit }, ctxRef) {
                 <FaFolderOpen /> Explore
               </span>
             ) : (
-              <span onClick={navigate}>
-                <TbExternalLink /> Open in new tab
-              </span>
+              <>
+                <span onClick={() => navigate('tab')}>
+                  <TbExternalLink /> Open in new tab
+                </span>
+                <span onClick={() => navigate('window')}>
+                  <TbExternalLink /> Open in new window
+                </span>
+                <span onClick={() => navigate('incognito')}>
+                  <RiSpyLine /> Open incognito
+                </span>
+                <span className={s.rule}></span>
+                <span onClick={copyUrl}>
+                  <TbCopy /> Copy URL
+                </span>
+              </>
             )}
           </div>
         ) : (
