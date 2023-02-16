@@ -1,10 +1,10 @@
 import { useEffect, useCallback, useRef } from 'react'
 import s from './App.module.css'
 import { useAtom } from 'jotai'
+import { useClickOutside } from './hooks/useClickOutside'
 import { bookmarksAtom, folderIdAtom, subTreeAtom, parentsAtom, updateIdAtom, clickedAtom, deleteConfirmAtom, isFolderAtom } from './state/atoms'
 import Window from './components/Window/Window'
 import Sidebar from './components/Sidebar/Sidebar'
-import Header from './components/Header'
 import Context from './components/Context'
 
 import DeleteConfirm from './components/DeleteConfirm'
@@ -22,20 +22,8 @@ function App() {
   const ctxRef = useRef(null)
   const deleteConfirmRef = useRef(null)
 
-  useEffect(() => {
-    const handleClick = (e) => {
-      if (ctxRef.current && !ctxRef.current.contains(e.target)) {
-        setClicked(false)
-        if (deleteConfirm) {
-          setDeleteConfirm(false)
-        }
-      }
-    }
-    document.addEventListener('click', handleClick, true)
-    return () => {
-      document.removeEventListener('click', handleClick, true)
-    }
-  }, [ctxRef, setClicked, deleteConfirm, setDeleteConfirm])
+  useClickOutside(ctxRef, () => setClicked(false))
+  useClickOutside(deleteConfirmRef, () => setDeleteConfirm(false))
 
   const bookmarksCb = useCallback(() => {
     chrome.bookmarks.getTree((bookmarks) => {
@@ -127,14 +115,21 @@ function App() {
     })
   }
 
+  function onEdit(newInfo) {
+    chrome.bookmarks.update(updateId, { title: newInfo.title, url: newInfo.url }, () => {
+      setClicked(false)
+      bookmarksCb()
+      subTreeCb()
+    })
+  }
+
   return (
     <div className={s.main}>
-      {/* <Header /> */}
       <div className={s.container}>
         <Sidebar onRename={onRename} />
         <Window bookmarksCb={bookmarksCb} onRename={onRename} />
       </div>
-      {clicked && <Context onRename={onRename} ref={ctxRef} />}
+      {clicked && <Context onEdit={onEdit} ref={ctxRef} />}
       {deleteConfirm && <DeleteConfirm onDelete={onDelete} ref={deleteConfirmRef} />}
     </div>
   )

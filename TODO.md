@@ -5,6 +5,7 @@
 - [ ] D&D into folder
 - [ ] Select / select multiple toggle
 - [x] Context menu for links
+- [ ] Display link context on long hover
 - [ ] display favicon next to link
 - [ ] Style Scrollbars
   

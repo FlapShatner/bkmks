@@ -11,7 +11,7 @@
     background-color: var(--clr-dark-alt);
     z-index: 9;
     color: var(--clr-primary-hover);
-    border: 3px dashed var(--clr-red);
+    border: 1px dashed var(--clr-red);
 }
 
 .container h3 {
@@ -41,11 +41,11 @@
 }
 
 .btns button {
-    background-color: transparent;
+    background-color: var(--clr-logo);
     font-size: 1rem;
     color: var(--clr-primary-hover);
     border: none;
-    padding: .5rem 1rem;
+    padding: 0 1rem;
     margin-top: .25rem;
     width: 50%;
 }

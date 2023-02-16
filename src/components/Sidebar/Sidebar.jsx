@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai'
-import { BiCheckSquare, BiCheck } from 'react-icons/bi'
+import { BiCheck } from 'react-icons/bi'
 import { atom, useAtom } from 'jotai'
 import { bookmarksAtom, folderIdAtom, clickedAtom, updateIdAtom, pointsAtom, renameAtom, isFolderAtom } from '../../state/atoms'
+import { useClickOutside } from '../../hooks/useClickOutside'
 
 import s from './Sidebar.module.css'
 
@@ -20,6 +21,16 @@ function Folder({ bookmark, onRename }) {
   const [, setIsFolder] = useAtom(isFolderAtom)
 
   const { id, title, children } = bookmark
+
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [rename])
+
+  useClickOutside(inputRef, () => setRename(false))
 
   function handleClick(e) {
     e.stopPropagation()
@@ -42,6 +53,7 @@ function Folder({ bookmark, onRename }) {
 
   function handleRename(e) {
     e.preventDefault()
+    console.log(newName)
     onRename(newName)
     setRename(false)
   }
@@ -50,7 +62,7 @@ function Folder({ bookmark, onRename }) {
 
   return (
     <div className={s.folder}>
-      <div id={id} onContextMenu={onRightClick} onClick={!isRename && handleClick} className={s.title}>
+      <div id={id} onContextMenu={onRightClick} onClick={!isRename ? handleClick : undefined} className={s.title}>
         {bookmark.hasFolders && (
           <div>
             <div onClick={handleCaretClick} className={s.caret}>
@@ -59,9 +71,9 @@ function Folder({ bookmark, onRename }) {
           </div>
         )}
         {isRename ? (
-          <form onSubmit={handleRename} className={s.rename}>
-            <input autoFocus onChange={(e) => setNewName(e.target.value)} onBlur={() => setRename(false)} value={newName} type='text' />
-            <button type='submit'>
+          <form ref={inputRef} onSubmit={handleRename} className={s.rename}>
+            <input autoFocus onChange={(e) => setNewName(e.target.value)} value={newName} type='text' />
+            <button onClick={handleRename} type='submit'>
               <BiCheck size={'2rem'} />
             </button>
           </form>
