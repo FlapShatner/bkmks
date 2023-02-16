@@ -7,16 +7,17 @@ import { IoReorderThree } from 'react-icons/io5'
 import { MdDragIndicator } from 'react-icons/md'
 import { FaFolderOpen, FaFolder } from 'react-icons/fa'
 import { useAtom } from 'jotai'
-import { folderIdAtom, subTreeAtom, parentsAtom, expandAtom, clickedAtom, updateIdAtom, pointsAtom, bmArrayAtom, dragAtom } from '../../state/atoms'
+import { folderIdAtom, subTreeAtom, parentsAtom, clickedAtom, updateIdAtom, pointsAtom, bmArrayAtom, dragAtom, isFolderAtom } from '../../state/atoms'
 
 import Item from '../Item'
 import { useEffect } from 'react'
 
-function Window() {
+function Window({ bookmarksCb }) {
   const [, setFolderId] = useAtom(folderIdAtom)
   const [subTree] = useAtom(subTreeAtom)
   const [parents] = useAtom(parentsAtom)
   const [, setClicked] = useAtom(clickedAtom)
+  const [, setIsFolder] = useAtom(isFolderAtom)
   const [, setUpdateId] = useAtom(updateIdAtom)
   const [, setPoints] = useAtom(pointsAtom)
   const [drag, setDrag] = useAtom(dragAtom)
@@ -39,11 +40,12 @@ function Window() {
     }
   }, [children])
 
-  function onFolderContext(e, id) {
+  function onContext(e, id, folder) {
     e.preventDefault()
     e.stopPropagation()
     setClicked(true)
     setUpdateId(id)
+    setIsFolder(folder)
     setPoints({ x: e.clientX, y: e.clientY })
   }
 
@@ -54,6 +56,7 @@ function Window() {
   function apiMove(id, newIndex, parentId) {
     chrome.bookmarks.move(id, { index: newIndex, parentId: parentId }, () => {
       console.log('moved bookmark: ', id, ' to index: ', newIndex, ' in folder: ', parentId)
+      bookmarksCb()
     })
   }
 
@@ -88,7 +91,11 @@ function Window() {
           ))}
         </div>
         <div className={s.titleBar}>
-          <h2 onContextMenu={(e) => onFolderContext(e, id)}>
+          <h2
+            onContextMenu={(e) => {
+              const folder = true
+              onContext(e, id, folder)
+            }}>
             <FaFolderOpen />
             {title}
           </h2>
@@ -105,10 +112,11 @@ function Window() {
               const child = children.find((child) => child.id === item)
               if (child != undefined) {
                 if (!child.children) {
+                  const folder = false
                   return (
                     <Item key={item} id={item} parentId={child.parentId}>
-                      <div className={`${s.link} ${drag && s.outline}`}>
-                        <a href={!drag && child.url}>
+                      <div onContextMenu={(e) => onContext(e, child.id, folder)} className={`${s.link} ${drag && s.outline}`}>
+                        <a href={!drag && child.url} target='_blank' rel='noopener noreferrer'>
                           <div className={`${s.icon} ${drag && s.wide}`}>
                             {drag && <MdDragIndicator size='1rem' color='var(--clr-primary-hover)' />}
                             <TbLink />
@@ -119,10 +127,11 @@ function Window() {
                     </Item>
                   )
                 } else {
+                  const folder = true
                   return (
                     <Item id={item} key={item}>
                       <div className={`${s.folder} ${drag && s.outline}`}>
-                        <h3 onContextMenu={(e) => onFolderContext(e, child.id)} onClick={() => handleClick(child.id)}>
+                        <h3 onContextMenu={(e) => onContext(e, child.id, folder)} onClick={() => handleClick(child.id)}>
                           <div className={`${s.icon} ${drag && s.wide}`}>
                             {drag && <MdDragIndicator size='1rem' color='var(--clr-primary-hover)' />}
                             <FaFolder size='.75rem' />

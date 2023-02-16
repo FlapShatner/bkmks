@@ -1,12 +1,12 @@
 # TODO
 
 ## Current Tasks
-- [ ] Fix navigate on link drag
-- [ ] Implement D&D on folder list
+- [x] Fix navigate on link drag
 - [ ] D&D into folder
 - [ ] Select / select multiple toggle
-- [ ] Context menu for links
+- [x] Context menu for links
 - [ ] display favicon next to link
+- [ ] Style Scrollbars
   
 ## Roadmap
 - [ ] Pin to popup

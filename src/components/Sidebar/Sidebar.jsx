@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai'
 import { BiCheckSquare, BiCheck } from 'react-icons/bi'
 import { atom, useAtom } from 'jotai'
-import { bookmarksAtom, folderIdAtom, clickedAtom, updateIdAtom, pointsAtom, renameAtom } from '../../state/atoms'
+import { bookmarksAtom, folderIdAtom, clickedAtom, updateIdAtom, pointsAtom, renameAtom, isFolderAtom } from '../../state/atoms'
 
 import s from './Sidebar.module.css'
 
@@ -17,6 +17,7 @@ function Folder({ bookmark, onRename }) {
   const [, setPoints] = useAtom(pointsAtom)
   const [rename, setRename] = useAtom(renameAtom)
   const [newName, setNewName] = useAtom(newNameAtom)
+  const [, setIsFolder] = useAtom(isFolderAtom)
 
   const { id, title, children } = bookmark
 
@@ -33,6 +34,7 @@ function Folder({ bookmark, onRename }) {
   function onRightClick(e) {
     e.preventDefault()
     e.stopPropagation()
+    setIsFolder(true)
     setClicked(true)
     setUpdateId(e.currentTarget.id)
     setPoints({ x: e.clientX, y: e.clientY })

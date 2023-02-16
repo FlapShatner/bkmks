@@ -1,11 +1,12 @@
 import { useEffect, useCallback, useRef } from 'react'
 import s from './App.module.css'
 import { useAtom } from 'jotai'
-import { bookmarksAtom, folderIdAtom, subTreeAtom, parentsAtom, updateIdAtom, clickedAtom, deleteConfirmAtom } from './state/atoms'
+import { bookmarksAtom, folderIdAtom, subTreeAtom, parentsAtom, updateIdAtom, clickedAtom, deleteConfirmAtom, isFolderAtom } from './state/atoms'
 import Window from './components/Window/Window'
 import Sidebar from './components/Sidebar/Sidebar'
 import Header from './components/Header'
-import FolderContext from './components/FolderContext'
+import Context from './components/Context'
+
 import DeleteConfirm from './components/DeleteConfirm'
 
 function App() {
@@ -16,8 +17,10 @@ function App() {
   const [, setParents] = useAtom(parentsAtom)
   const [updateId] = useAtom(updateIdAtom)
   const [clicked, setClicked] = useAtom(clickedAtom)
+  const [isFolder] = useAtom(isFolderAtom)
 
   const ctxRef = useRef(null)
+  const deleteConfirmRef = useRef(null)
 
   useEffect(() => {
     const handleClick = (e) => {
@@ -27,7 +30,6 @@ function App() {
           setDeleteConfirm(false)
         }
       }
-      console.log(e.target)
     }
     document.addEventListener('click', handleClick, true)
     return () => {
@@ -101,11 +103,20 @@ function App() {
   }
 
   function onDelete() {
-    chrome.bookmarks.removeTree(updateId, () => {
-      setClicked(false)
-      bookmarksCb()
-      subTreeCb()
-    })
+    console.log(updateId)
+    isFolder
+      ? chrome.bookmarks.removeTree(updateId, () => {
+          setDeleteConfirm(false)
+          setClicked(false)
+          bookmarksCb()
+          subTreeCb()
+        })
+      : chrome.bookmarks.remove(updateId, () => {
+          setDeleteConfirm(false)
+          setClicked(false)
+          bookmarksCb()
+          subTreeCb()
+        })
   }
 
   function onRename(newName) {
@@ -121,10 +132,10 @@ function App() {
       {/* <Header /> */}
       <div className={s.container}>
         <Sidebar onRename={onRename} />
-        <Window onRename={onRename} />
+        <Window bookmarksCb={bookmarksCb} onRename={onRename} />
       </div>
-      {clicked && <FolderContext onRename={onRename} ref={ctxRef} />}
-      {deleteConfirm && <DeleteConfirm onDelete={onDelete} />}
+      {clicked && <Context onRename={onRename} ref={ctxRef} />}
+      {deleteConfirm && <DeleteConfirm onDelete={onDelete} ref={deleteConfirmRef} />}
     </div>
   )
 }
