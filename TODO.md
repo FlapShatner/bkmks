@@ -18,7 +18,7 @@
 - [x] open in new window
 - [x] open incog
 - [ ] copy url
-- [ ] preview
+- [ ] preview (https://docs.linkpreview.net/)
   
 ## Roadmap
 - [ ] Pin to popup
