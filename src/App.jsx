@@ -2,10 +2,11 @@ import { useEffect, useCallback, useRef } from 'react'
 import s from './App.module.css'
 import { useAtom } from 'jotai'
 import { useClickOutside } from './hooks/useClickOutside'
-import { bookmarksAtom, folderIdAtom, subTreeAtom, parentsAtom, updateIdAtom, clickedAtom, deleteConfirmAtom, isFolderAtom } from './state/atoms'
+import { bookmarksAtom, folderIdAtom, subTreeAtom, parentsAtom, updateIdAtom, clickedAtom, deleteConfirmAtom, isFolderAtom, newFolderAtom } from './state/atoms'
 import Window from './components/Window/Window'
 import Sidebar from './components/Sidebar/Sidebar'
 import Context from './components/Context'
+import CreateFolder from './components/CreateFolder'
 
 import DeleteConfirm from './components/DeleteConfirm'
 
@@ -18,12 +19,15 @@ function App() {
   const [updateId] = useAtom(updateIdAtom)
   const [clicked, setClicked] = useAtom(clickedAtom)
   const [isFolder] = useAtom(isFolderAtom)
+  const [newFolder, setNewFolder] = useAtom(newFolderAtom)
 
   const ctxRef = useRef(null)
   const deleteConfirmRef = useRef(null)
+  const createFolderRef = useRef(null)
 
   useClickOutside(ctxRef, () => setClicked(false))
   useClickOutside(deleteConfirmRef, () => setDeleteConfirm(false))
+  useClickOutside(createFolderRef, () => setNewFolder(false))
 
   const bookmarksCb = useCallback(() => {
     chrome.bookmarks.getTree((bookmarks) => {
@@ -131,6 +135,7 @@ function App() {
       </div>
       {clicked && <Context onEdit={onEdit} ref={ctxRef} />}
       {deleteConfirm && <DeleteConfirm onDelete={onDelete} ref={deleteConfirmRef} />}
+      {newFolder && <CreateFolder ref={createFolderRef} />}
     </div>
   )
 }

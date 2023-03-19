@@ -4,10 +4,21 @@ import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSo
 import s from './Window.module.css'
 import { TbCaretRight, TbLink } from 'react-icons/tb'
 import { IoReorderThree } from 'react-icons/io5'
-import { MdDragIndicator } from 'react-icons/md'
-import { FaFolderOpen, FaFolder } from 'react-icons/fa'
+import { MdDragIndicator, MdMoreVert } from 'react-icons/md'
+import { FaFolderOpen, FaFolder, FaFolderPlus } from 'react-icons/fa'
 import { useAtom } from 'jotai'
-import { folderIdAtom, subTreeAtom, parentsAtom, clickedAtom, updateIdAtom, pointsAtom, bmArrayAtom, dragAtom, isFolderAtom } from '../../state/atoms'
+import {
+  folderIdAtom,
+  subTreeAtom,
+  parentsAtom,
+  clickedAtom,
+  updateIdAtom,
+  pointsAtom,
+  bmArrayAtom,
+  dragAtom,
+  isFolderAtom,
+  newFolderAtom,
+} from '../../state/atoms'
 
 import Test from '../Test'
 import Item from '../Item'
@@ -22,6 +33,7 @@ function Window({ bookmarksCb }) {
   const [, setUpdateId] = useAtom(updateIdAtom)
   const [, setPoints] = useAtom(pointsAtom)
   const [drag, setDrag] = useAtom(dragAtom)
+  const [newFolder, setNewFolder] = useAtom(newFolderAtom)
 
   const { id, title, children } = subTree
 
@@ -91,7 +103,7 @@ function Window({ bookmarksCb }) {
             </div>
           ))}
         </div>
-        <Test />
+        {/* <Test /> */}
         <div className={s.titleBar}>
           <h2
             onContextMenu={(e) => {
@@ -101,9 +113,14 @@ function Window({ bookmarksCb }) {
             <FaFolderOpen />
             {title}
           </h2>
-          <button className={!drag && s.opacity} onClick={() => setDrag(!drag)}>
-            <IoReorderThree size={'1.25rem'} /> Reorder Items
-          </button>
+          <div className={s.titleBtns}>
+            <button onClick={() => setNewFolder(!newFolder)}>
+              <FaFolderPlus size={'1rem'} /> New Folder
+            </button>
+            <button onClick={() => setDrag(!drag)}>
+              <IoReorderThree size={'1.25rem'} /> Reorder Items
+            </button>
+          </div>
         </div>
       </div>
 

@@ -4,18 +4,29 @@ function Test() {
   const [input, setInput] = useState('')
 
   const handleClick = async () => {
-    const apiUrl = 'http://localhost:8080'
+    const apiKey = 'c2c33c5d75465cee78bb96bb3966d2e4'
     const url = input
 
-    const data = await fetch(`${apiUrl}?url=${url}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).json
-
-    setResult(data)
-    console.log(data)
+    const data = { key: apiKey, q: url }
+    fetch('https://api.linkpreview.net', {
+      method: 'POST',
+      mode: 'cors',
+      body: JSON.stringify(data),
+    })
+      .then((res) => {
+        if (res.status != 200) {
+          console.log(res.status)
+          throw new Error('something went wrong')
+        }
+        return res.json()
+      })
+      .then((response) => {
+        setResult(response)
+        console.log(response)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   return (

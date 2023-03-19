@@ -1,0 +1,53 @@
+.wrapper {
+    border: 1px solid var(--clr-primary-hover);
+    padding: 1rem;
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--clr-dark-alt);
+    z-index: 9;
+    color: var(--clr-primary-hover)
+}
+
+.wrapper h3 {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.wrapper form {
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+}
+
+.wrapper label {
+    font-weight: 700;
+}
+
+.wrapper input {
+    width: 20rem;
+    background-color: var(--clr-primary-hover);
+    border: none;
+    font-weight: 700;
+}
+
+.wrapper div:nth-child(2) {
+    margin: 1rem 0;
+}
+
+.wrapper button {
+    background-color: var(--clr-logo);
+    border: none;
+    color: var(--clr-primary-hover);
+    width: 10rem;
+    margin-left: auto;
+    font-size: 1rem;
+    transition: background-color .1s ease-in-out;
+    margin-top: 1rem;
+}
+
+.wrapper button:hover {
+    background-color: var(--clr-dark);
+}
