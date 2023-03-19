@@ -35,9 +35,7 @@
   <p align="center">
     A bookmarks manager extension for Google Chrome
     <br />    
-    <br />
-    <a href="https://github.com/FlapShatner/bkmks">View Demo</a>
-    ·
+    <br />    
     <a href="https://github.com/FlapShatner/bkmks/issues">Report Bug</a>
     ·
     <a href="https://github.com/FlapShatner/bkmks/issues">Request Feature</a>
