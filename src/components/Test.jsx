@@ -1,32 +1,31 @@
 import { useState } from 'react'
 function Test() {
-  const [result, setResult] = useState('')
+  const [preview, setPreview] = useState('')
   const [input, setInput] = useState('')
 
-  const handleClick = async () => {
-    const apiKey = 'c2c33c5d75465cee78bb96bb3966d2e4'
-    const url = input
+  async function getPreview(url) {
+    const server = 'https://link-preview-74vm.onrender.com'
+    const URI = encodeURI(url)
 
-    const data = { key: apiKey, q: url }
-    fetch('https://api.linkpreview.net', {
-      method: 'POST',
-      mode: 'cors',
-      body: JSON.stringify(data),
+    const response = await fetch(`${server}/preview?url=${URI}`, {
+      method: 'GET',
+      'content-type': 'application/json',
     })
-      .then((res) => {
-        if (res.status != 200) {
-          console.log(res.status)
-          throw new Error('something went wrong')
-        }
-        return res.json()
-      })
-      .then((response) => {
-        setResult(response)
-        console.log(response)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    if (!response.ok) {
+      throw new Error('something went wrong')
+    }
+    const data = await response.json()
+    return data
+  }
+
+  const handleClick = async () => {
+    try {
+      const result = await getPreview(input)
+      setPreview(result)
+      console.log(result)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   return (

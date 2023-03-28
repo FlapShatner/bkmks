@@ -103,7 +103,7 @@ function Window({ bookmarksCb }) {
             </div>
           ))}
         </div>
-        {/* <Test /> */}
+        <Test />
         <div className={s.titleBar}>
           <h2
             onContextMenu={(e) => {
