@@ -4,10 +4,10 @@ function Test() {
   const [input, setInput] = useState('')
 
   async function getPreview(url) {
-    const server = import.meta.env.REACT_APP_API_URL
+    const server = 'https://link-preview-74vm.onrender.com'
     const URI = encodeURI(url)
 
-    const response = await fetch(`http://localhost:8888/preview?url=${URI}`, {
+    const response = await fetch(`${server}/preview?url=${URI}`, {
       method: 'GET',
       'content-type': 'application/json',
     })
