@@ -1,10 +1,22 @@
 import { forwardRef, useEffect, useMemo } from 'react'
 import s from './Context.module.css'
+import { VscEye } from 'react-icons/vsc'
 import { TbEdit, TbTrash, TbExternalLink, TbCopy } from 'react-icons/tb'
 import { FaFolderOpen } from 'react-icons/fa'
 import { RiSpyLine } from 'react-icons/ri'
 import { useAtom } from 'jotai'
-import { pointsAtom, folderIdAtom, updateIdAtom, deleteConfirmAtom, renameAtom, clickedAtom, isFolderAtom, editAtom, currentAtom } from '../state/atoms'
+import {
+  pointsAtom,
+  folderIdAtom,
+  updateIdAtom,
+  deleteConfirmAtom,
+  renameAtom,
+  clickedAtom,
+  isFolderAtom,
+  editAtom,
+  currentAtom,
+  isPreviewAtom,
+} from '../state/atoms'
 
 const Context = forwardRef(function Context({ onEdit }, ctxRef) {
   const [points] = useAtom(pointsAtom)
@@ -16,9 +28,13 @@ const Context = forwardRef(function Context({ onEdit }, ctxRef) {
   const [isFolder] = useAtom(isFolderAtom)
   const [edit, setEdit] = useAtom(editAtom)
   const [current, setCurrent] = useAtom(currentAtom)
+  const [, setIsPreview] = useAtom(isPreviewAtom)
+
+  const prevTxt = 'Preview (beta)'
 
   useEffect(() => {
     setEdit(false)
+    setIsPreview(false)
   }, [])
 
   useEffect(() => {
@@ -41,6 +57,11 @@ const Context = forwardRef(function Context({ onEdit }, ctxRef) {
   function handleEdit(e) {
     e.preventDefault()
     onEdit({ title: current.title, url: current.url })
+  }
+
+  function handlePreview() {
+    setClicked(false)
+    setIsPreview(true)
   }
 
   function copyUrl() {
@@ -82,6 +103,10 @@ const Context = forwardRef(function Context({ onEdit }, ctxRef) {
 
             <span onClick={handleDelete}>
               <TbTrash /> Delete
+            </span>
+            <span className={s.rule}></span>
+            <span onClick={handlePreview}>
+              <VscEye /> {prevTxt}
             </span>
             <span className={s.rule}></span>
             {isFolder ? (
