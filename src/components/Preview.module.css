@@ -1,10 +1,11 @@
 .wrapper {
     position: absolute;
-    top: 10rem;
-    left: 3rem;
+    top: 40%;
+    right: 50%;
     background-color: var(--clr-dark-alt);
     z-index: 9;
-    color: var(--clr-primary-hover)
+    color: var(--clr-primary-hover);
+    transform: translateX(50%);
 }
 
 .container {

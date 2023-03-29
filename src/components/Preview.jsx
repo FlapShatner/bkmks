@@ -1,13 +1,16 @@
-import { forwardRef, useEffect } from 'react'
-import { useAtom } from 'jotai'
+import { forwardRef, useEffect, useLayoutEffect } from 'react'
+import { atom, useAtom } from 'jotai'
 import s from './Preview.module.css'
 import { previewAtom, pointsAtom, updateIdAtom, currentAtom } from '../state/atoms'
+
+const adjPointsAtom = atom({ x: 0, y: 0 })
 
 const Preview = forwardRef(function Preview(props, ref) {
   const [preview, setPreview] = useAtom(previewAtom)
   const [points] = useAtom(pointsAtom)
   const [updateId] = useAtom(updateIdAtom)
   const [current, setCurrent] = useAtom(currentAtom)
+  const [adjPoints, setAdjPoints] = useAtom(adjPointsAtom)
 
   useEffect(() => {
     chrome.bookmarks.get(updateId, (bookmark) => {
@@ -22,6 +25,7 @@ const Preview = forwardRef(function Preview(props, ref) {
       title: 'Loading...',
       description: 'Loading...',
     })
+
     async function usePreview(url) {
       const server = 'https://link-preview-74vm.onrender.com'
       const URI = encodeURI(url)
@@ -41,6 +45,15 @@ const Preview = forwardRef(function Preview(props, ref) {
     }
   }, [])
 
+  useLayoutEffect(() => {
+    const { x, y } = points
+    const { width, height } = ref.current.getBoundingClientRect()
+    const { innerWidth, innerHeight } = window
+    const adjX = x + width > innerWidth ? innerWidth - width : x
+    const adjY = y + height > innerHeight - 200 ? innerHeight - height - 250 : y
+    setAdjPoints({ x: adjX, y: adjY })
+  }, [])
+
   let img = preview.images
   if (preview.images && preview.images.length > 1) {
     img = preview.images[0]
@@ -53,7 +66,7 @@ const Preview = forwardRef(function Preview(props, ref) {
 
   return (
     <>
-      <div style={{ top: points.y, left: points.x }} ref={ref} className={s.wrapper}>
+      <div ref={ref} className={s.wrapper}>
         <div className={s.container}>
           <div className={s.title}>
             <img src={favicon} alt='' className={s.icon} />

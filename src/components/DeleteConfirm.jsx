@@ -1,11 +1,12 @@
 import s from './DeleteConfirm.module.css'
 
-import { useEffect, useMemo, forwardRef } from 'react'
+import { useEffect, useMemo, forwardRef, useLayoutEffect } from 'react'
 import { atom, useAtom } from 'jotai'
 
 import { pointsAtom, updateIdAtom, deleteConfirmAtom, clickedAtom } from '../state/atoms'
 
 const titleAtom = atom('')
+const adjPointsAtom = atom({ x: 0, y: 0 })
 
 const DeleteConfirm = forwardRef(function DeleteConfirm({ onDelete }, deleteConfirmRef) {
   const [points] = useAtom(pointsAtom)
@@ -13,11 +14,21 @@ const DeleteConfirm = forwardRef(function DeleteConfirm({ onDelete }, deleteConf
   const [title, setTitle] = useAtom(titleAtom)
   const [, setDeleteConfirm] = useAtom(deleteConfirmAtom)
   const [, setClicked] = useAtom(clickedAtom)
+  const [adjPoints, setAdjPoints] = useAtom(adjPointsAtom)
 
   useEffect(() => {
     chrome.bookmarks.get(updateId, (result) => {
       setTitle(result[0].title)
     })
+  }, [])
+
+  useLayoutEffect(() => {
+    const { x, y } = points
+    const { width, height } = deleteConfirmRef.current.getBoundingClientRect()
+    const { innerWidth, innerHeight } = window
+    const adjX = x + width > innerWidth ? innerWidth - width : x
+    const adjY = y + height > innerHeight ? innerHeight - height : y
+    setAdjPoints({ x: adjX, y: adjY })
   }, [])
 
   function handleDelete() {
@@ -31,7 +42,7 @@ const DeleteConfirm = forwardRef(function DeleteConfirm({ onDelete }, deleteConf
   }
 
   return (
-    <div ref={deleteConfirmRef} style={{ top: points.y, left: points.x }} className={s.wrapper}>
+    <div ref={deleteConfirmRef} style={{ top: adjPoints.y, left: adjPoints.x }} className={s.wrapper}>
       <div className={s.container}>
         <h3>Are you sure you want to delete the item</h3>
         <h3>{title} ?</h3>

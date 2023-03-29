@@ -1,10 +1,10 @@
-import { forwardRef, useEffect, useMemo } from 'react'
+import { forwardRef, useEffect, useMemo, useLayoutEffect } from 'react'
 import s from './Context.module.css'
 import { VscEye } from 'react-icons/vsc'
 import { TbEdit, TbTrash, TbExternalLink, TbCopy } from 'react-icons/tb'
 import { FaFolderOpen } from 'react-icons/fa'
 import { RiSpyLine } from 'react-icons/ri'
-import { useAtom } from 'jotai'
+import { atom, useAtom } from 'jotai'
 import {
   pointsAtom,
   folderIdAtom,
@@ -18,6 +18,8 @@ import {
   isPreviewAtom,
 } from '../state/atoms'
 
+const adjPointsAtom = atom({ x: 0, y: 0 })
+
 const Context = forwardRef(function Context({ onEdit }, ctxRef) {
   const [points] = useAtom(pointsAtom)
   const [, setRename] = useAtom(renameAtom)
@@ -29,6 +31,7 @@ const Context = forwardRef(function Context({ onEdit }, ctxRef) {
   const [edit, setEdit] = useAtom(editAtom)
   const [current, setCurrent] = useAtom(currentAtom)
   const [, setIsPreview] = useAtom(isPreviewAtom)
+  const [adjPoints, setAdjPoints] = useAtom(adjPointsAtom)
 
   const prevTxt = 'Preview (beta)'
 
@@ -43,6 +46,15 @@ const Context = forwardRef(function Context({ onEdit }, ctxRef) {
         setCurrent(bookmark[0])
       }
     })
+  }, [])
+
+  useLayoutEffect(() => {
+    const { x, y } = points
+    const { width, height } = ctxRef.current.getBoundingClientRect()
+    const { innerWidth, innerHeight } = window
+    const adjX = x + width > innerWidth ? innerWidth - width : x
+    const adjY = y + height > innerHeight ? innerHeight - height : y
+    setAdjPoints({ x: adjX, y: adjY })
   }, [])
 
   function handleDelete() {
@@ -87,7 +99,7 @@ const Context = forwardRef(function Context({ onEdit }, ctxRef) {
   const display = deleteConfirm ? 'none' : 'block'
 
   return (
-    <div ref={ctxRef} style={{ top: points.y, left: points.x }} className={s.wrapper}>
+    <div ref={ctxRef} style={{ top: adjPoints.y, left: adjPoints.x }} className={s.wrapper}>
       <div style={{ display: display }} className={s.container}>
         {!edit ? (
           <div>
