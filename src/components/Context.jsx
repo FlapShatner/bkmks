@@ -105,16 +105,17 @@ const Context = forwardRef(function Context({ onEdit }, ctxRef) {
               <TbTrash /> Delete
             </span>
             <span className={s.rule}></span>
-            <span onClick={handlePreview}>
-              <VscEye /> {prevTxt}
-            </span>
-            <span className={s.rule}></span>
+
             {isFolder ? (
               <span onClick={() => setFolderId(updateId)}>
                 <FaFolderOpen /> Explore
               </span>
             ) : (
               <>
+                <span onClick={handlePreview}>
+                  <VscEye /> {prevTxt}
+                </span>
+                <span className={s.rule}></span>
                 <span onClick={() => navigate('tab')}>
                   <TbExternalLink /> Open in new tab
                 </span>
