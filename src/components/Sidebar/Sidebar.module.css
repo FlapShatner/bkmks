@@ -1,0 +1,89 @@
+.child {
+    padding-left: 2rem;
+}
+
+.sidebar {
+    display: flex;
+
+}
+
+.logo {
+    padding-top: 1rem;
+    border-right: 1px solid var(--clr-dark-alt);
+    background-color: var(--clr-logo);
+}
+
+.logo h1 {
+    text-orientation: sideways;
+    writing-mode: vertical-rl;
+    color: var(--clr-primary-hover)
+}
+
+
+.list {
+    max-height: 100dvh;
+    max-height: 100vh;
+    overflow: scroll;
+    overflow-x: hidden;
+    padding: .5rem;
+    position: relative;
+    width: 18rem;
+}
+
+.folder {
+    padding-left: 1rem;
+    width: max-content;
+}
+
+.folder h2 {
+    margin: .25rem 0;
+    font-size: .9rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.folder h2:hover {
+    color: var(--clr-primary-hover);
+}
+
+.folder .title {
+    display: flex;
+    align-items: center;
+
+}
+
+.caret {
+    width: 2rem;
+    height: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding-right: .5rem;
+    cursor: pointer;
+    margin-left: -2rem;
+}
+
+.rename {
+    display: flex;
+    gap: .125rem;
+
+}
+
+.rename button {
+    padding: 0;
+    margin: 0 .25rem;
+    background-color: var(--clr-dark-alt);
+    color: var(--clr-primary-hover);
+    border: 1px solid var(--clr-primary-hover);
+    cursor: pointer;
+}
+
+.rename input {
+    line-height: .75;
+    width: 70%;
+    background-color: var(--clr-dark-alt);
+    border: none;
+    color: var(--clr-primary-hover);
+    font-size: .9rem;
+    padding: 0 .25rem;
+}

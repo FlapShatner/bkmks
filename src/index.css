@@ -1,0 +1,80 @@
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/*
+  Josh's Custom CSS Reset
+  https://www.joshwcomeau.com/css/custom-css-reset/
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--clr-dark);
+  color: var(--clr-primary);
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+:root {
+  --clr-dark: hsl(220, 11%, 15%);
+  --clr-dark-alt: #31343d;
+  --clr-logo: hsl(216, 11%, 17%);
+  --clr-primary: hsla(256, 70%, 79%, 0.902);
+  --clr-primary-hover: hsla(256, 38%, 90%, 1);
+  --clr-primary-hover-60: hsla(256, 38%, 90%, .6);
+  --clr-link-hover: hsla(65, 59%, 90%, 1);
+  --clr-link: hsla(65, 59%, 90%, .7);
+  --clr-red: hsla(360, 74%, 62%, .9);
+  --transition: all .1s ease-in-out;
+  --gradient: linear-gradient(180deg, #282c34 0%, #31343d 100%);
+}
+
+#root,
+#__next {
+  isolation: isolate;
+}
