@@ -11,7 +11,7 @@ import { useDelete } from './hooks/useDelete'
 import { useRename } from './hooks/useRename'
 import { useEdit } from './hooks/useEdit'
 
-import { folderIdAtom, clickedAtom, deleteConfirmAtom, newFolderAtom, isPreviewAtom } from './state/atoms'
+import { folderIdAtom, clickedAtom, deleteConfirmAtom, newFolderAtom, isPreviewAtom } from './state/store'
 
 import Window from './components/Window/Window'
 import Sidebar from './components/Sidebar/Sidebar'

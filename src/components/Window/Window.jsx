@@ -1,13 +1,14 @@
+import { useEffect } from 'react'
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'
-
-import s from './Window.module.css'
-import { TbCaretRight, TbLink } from 'react-icons/tb'
-import { IoReorderThree } from 'react-icons/io5'
-import { MdDragIndicator, MdMoreVert } from 'react-icons/md'
-import { FaFolderOpen, FaFolder, FaFolderPlus } from 'react-icons/fa'
 import { useAtom } from 'jotai'
 import { useBookmarks } from '../../hooks/useBookmarks'
+
+import { TbCaretRight, TbLink } from 'react-icons/tb'
+import { IoReorderThree } from 'react-icons/io5'
+import { MdDragIndicator } from 'react-icons/md'
+import { FaFolderOpen, FaFolder, FaFolderPlus } from 'react-icons/fa'
+
 import {
   folderIdAtom,
   subTreeAtom,
@@ -19,11 +20,11 @@ import {
   dragAtom,
   isFolderAtom,
   newFolderAtom,
-} from '../../state/atoms'
+} from '../../state/store'
 
-import Test from '../Test'
 import Item from '../Item'
-import { useEffect } from 'react'
+
+import s from './Window.module.css'
 
 function Window() {
   const [, setFolderId] = useAtom(folderIdAtom)
@@ -36,8 +37,6 @@ function Window() {
   const [drag, setDrag] = useAtom(dragAtom)
   const [newFolder, setNewFolder] = useAtom(newFolderAtom)
 
-  const { id, title, children } = subTree
-
   const [bmArray, setBmArray] = useAtom(bmArrayAtom)
 
   const [bookmarks, bookmarksCb] = useBookmarks()
@@ -48,6 +47,8 @@ function Window() {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   )
+
+  const { id, title, children } = subTree
 
   useEffect(() => {
     if (children !== undefined) {
@@ -106,7 +107,6 @@ function Window() {
             </div>
           ))}
         </div>
-        {/* <Test /> */}
         <div className={s.titleBar}>
           <h2
             onContextMenu={(e) => {

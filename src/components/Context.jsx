@@ -16,7 +16,7 @@ import {
   editAtom,
   currentAtom,
   isPreviewAtom,
-} from '../state/atoms'
+} from '../state/store'
 
 const adjPointsAtom = atom({ x: 0, y: 0 })
 

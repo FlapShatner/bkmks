@@ -3,7 +3,7 @@ import s from './DeleteConfirm.module.css'
 import { useEffect, forwardRef, useLayoutEffect } from 'react'
 import { atom, useAtom } from 'jotai'
 
-import { pointsAtom, updateIdAtom, deleteConfirmAtom, clickedAtom } from '../state/atoms'
+import { pointsAtom, updateIdAtom, deleteConfirmAtom, clickedAtom } from '../state/store'
 
 const titleAtom = atom('')
 const adjPointsAtom = atom({ x: 0, y: 0 })

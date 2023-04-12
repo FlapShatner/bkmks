@@ -2,9 +2,8 @@ import { useEffect, useMemo, useRef } from 'react'
 import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai'
 import { BiCheck } from 'react-icons/bi'
 import { atom, useAtom } from 'jotai'
-import { bookmarksAtom, folderIdAtom, clickedAtom, updateIdAtom, pointsAtom, renameAtom, isFolderAtom } from '../../state/atoms'
+import { bookmarksAtom, folderIdAtom, clickedAtom, updateIdAtom, pointsAtom, renameAtom, isFolderAtom } from '../../state/store'
 import { useClickOutside } from '../../hooks/useClickOutside'
-// import { useBookmarks } from '../../hooks/useBookmarks'
 
 import s from './Sidebar.module.css'
 
@@ -44,7 +43,7 @@ function Folder({ bookmark, onRename }) {
     setShow(!show)
   }
 
-  function onRightClick(e) {
+  function handleRightClick(e) {
     e.preventDefault()
     e.stopPropagation()
     setIsFolder(true)
@@ -64,7 +63,7 @@ function Folder({ bookmark, onRename }) {
 
   return (
     <div className={s.folder}>
-      <div id={id} onContextMenu={onRightClick} onClick={!isRename ? handleClick : undefined} className={s.title}>
+      <div id={id} onContextMenu={handleRightClick} onClick={!isRename ? handleClick : undefined} className={s.title}>
         {bookmark.hasFolders && (
           <div>
             <div onClick={handleCaretClick} className={s.caret}>

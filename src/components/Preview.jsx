@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useLayoutEffect } from 'react'
 import { atom, useAtom } from 'jotai'
 import s from './Preview.module.css'
-import { previewAtom, pointsAtom, updateIdAtom, currentAtom } from '../state/atoms'
+import { previewAtom, pointsAtom, updateIdAtom, currentAtom } from '../state/store'
 
 const adjPointsAtom = atom({ x: 0, y: 0 })
 

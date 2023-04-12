@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { atom, useAtom } from 'jotai'
-import { pointsAtom } from '../state/atoms'
+import { pointsAtom } from '../state/store'
 
 export function useClickOutside(ref, callback) {
   const [, setPoints] = useAtom(pointsAtom)

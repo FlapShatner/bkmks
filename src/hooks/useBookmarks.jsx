@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useAtom } from 'jotai'
-import { bookmarksAtom } from '../state/atoms'
+import { bookmarksAtom } from '../state/store'
 
 export const useBookmarks = () => {
   const [bookmarks, setBookmarks] = useAtom(bookmarksAtom)

@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useAtom } from 'jotai'
-import { folderIdAtom, subTreeAtom } from '../state/atoms'
+import { folderIdAtom, subTreeAtom } from '../state/store'
 
 export const useSubTree = () => {
   const [folderId] = useAtom(folderIdAtom)

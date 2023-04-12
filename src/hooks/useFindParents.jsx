@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai'
-import { parentsAtom, bookmarksAtom } from '../state/atoms'
+import { parentsAtom, bookmarksAtom } from '../state/store'
 import { useParentCb } from './useParentCb'
 
 export function useFindParents() {

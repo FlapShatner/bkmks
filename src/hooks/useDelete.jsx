@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai'
-import { deleteConfirmAtom, clickedAtom, isFolderAtom, updateIdAtom } from '../state/atoms'
+import { deleteConfirmAtom, clickedAtom, isFolderAtom, updateIdAtom } from '../state/store'
 import { useBookmarks } from './useBookmarks'
 import { useSubTree } from './useSubTree'
 

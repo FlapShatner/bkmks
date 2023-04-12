@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai'
-import { clickedAtom, updateIdAtom } from '../state/atoms'
+import { clickedAtom, updateIdAtom } from '../state/store'
 export function useEdit() {
   const [, setClicked] = useAtom(clickedAtom)
   const [updateId] = useAtom(updateIdAtom)
