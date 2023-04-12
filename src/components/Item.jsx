@@ -1,11 +1,9 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useAtom } from 'jotai'
-import { dragAtom } from '../state/store'
+import { useAtomContext } from '../state/atomContext'
 
 export default function Item(props) {
-  const [drag] = useAtom(dragAtom)
-
+  const { drag } = useAtomContext()
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: props.id, data: { parentId: props.parentId }, disabled: !drag })
 
   const style = {

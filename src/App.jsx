@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react'
 import s from './App.module.css'
 
-import { useAtom } from 'jotai'
 import { useClickOutside } from './hooks/useClickOutside'
 import { useBookmarks } from './hooks/useBookmarks'
 import { useSubTree } from './hooks/useSubTree'
@@ -11,7 +10,7 @@ import { useDelete } from './hooks/useDelete'
 import { useRename } from './hooks/useRename'
 import { useEdit } from './hooks/useEdit'
 
-import { folderIdAtom, clickedAtom, deleteConfirmAtom, newFolderAtom, isPreviewAtom } from './state/store'
+import { useAtomContext } from './state/atomContext'
 
 import Window from './components/Window/Window'
 import Sidebar from './components/Sidebar/Sidebar'
@@ -21,12 +20,7 @@ import Preview from './components/Preview'
 import DeleteConfirm from './components/DeleteConfirm'
 
 function App() {
-  const [deleteConfirm, setDeleteConfirm] = useAtom(deleteConfirmAtom)
-  const [folderId] = useAtom(folderIdAtom)
-
-  const [clicked, setClicked] = useAtom(clickedAtom)
-  const [newFolder, setNewFolder] = useAtom(newFolderAtom)
-  const [isPreview, setIsPreview] = useAtom(isPreviewAtom)
+  const { deleteConfirm, setDeleteConfirm, folderId, clicked, setClicked, newFolder, setNewFolder, isPreview, setIsPreview } = useAtomContext()
 
   const ctxRef = useRef(null)
   const deleteConfirmRef = useRef(null)
@@ -34,7 +28,10 @@ function App() {
   const previewRef = useRef(null)
 
   useClickOutside(ctxRef, () => setClicked(false))
-  useClickOutside(deleteConfirmRef, () => setDeleteConfirm(false))
+  useClickOutside(deleteConfirmRef, () => {
+    setDeleteConfirm(false)
+    setClicked(false)
+  })
   useClickOutside(createFolderRef, () => setNewFolder(false))
   useClickOutside(previewRef, () => setIsPreview(false))
 

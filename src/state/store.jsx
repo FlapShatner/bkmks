@@ -20,3 +20,5 @@ export const currentAtom = atom({})
 export const newFolderAtom = atom(false)
 export const previewAtom = atom({})
 export const isPreviewAtom = atom(false)
+
+// make a comma separated list of each of the const above

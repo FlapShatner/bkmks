@@ -1,24 +1,19 @@
 import { useEffect, useMemo, useRef } from 'react'
+import { useAtomContext } from '../../state/atomContext'
+import { useClickOutside } from '../../hooks/useClickOutside'
+import { atom, useAtom } from 'jotai'
 import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai'
 import { BiCheck } from 'react-icons/bi'
-import { atom, useAtom } from 'jotai'
-import { bookmarksAtom, folderIdAtom, clickedAtom, updateIdAtom, pointsAtom, renameAtom, isFolderAtom } from '../../state/store'
-import { useClickOutside } from '../../hooks/useClickOutside'
 
 import s from './Sidebar.module.css'
 
 function Folder({ bookmark, onRename }) {
   const showAtom = useMemo(() => (bookmark.id === '1' ? atom(true) : atom(false)), [bookmark.id])
   const newNameAtom = useMemo(() => atom(bookmark.title), [bookmark.title])
+
   const [show, setShow] = useAtom(showAtom)
-  const [, setFolderId] = useAtom(folderIdAtom)
-  const [updateId] = useAtom(updateIdAtom)
-  const [, setClicked] = useAtom(clickedAtom)
-  const [, setUpdateId] = useAtom(updateIdAtom)
-  const [, setPoints] = useAtom(pointsAtom)
-  const [rename, setRename] = useAtom(renameAtom)
   const [newName, setNewName] = useAtom(newNameAtom)
-  const [, setIsFolder] = useAtom(isFolderAtom)
+  const { setFolderId, setRename, updateId, setClicked, setUpdateId, setPoints, rename, setIsFolder } = useAtomContext()
 
   const { id, title, children } = bookmark
 
@@ -91,8 +86,9 @@ function Folder({ bookmark, onRename }) {
 }
 
 function Sidebar({ onRename }) {
-  const [bookmarks] = useAtom(bookmarksAtom)
+  // const [bookmarks] = useAtom(bookmarksAtom)
   // const [bookmarks] = useBookmarks()
+  const { bookmarks } = useAtomContext()
 
   return (
     <div className={s.sidebar}>

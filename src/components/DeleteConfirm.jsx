@@ -1,34 +1,20 @@
 import s from './DeleteConfirm.module.css'
-
-import { useEffect, forwardRef, useLayoutEffect } from 'react'
+import { useAtomContext } from '../state/atomContext'
+import useAdjustedPoints from '../hooks/usePoints'
+import { useEffect, forwardRef } from 'react'
 import { atom, useAtom } from 'jotai'
 
-import { pointsAtom, updateIdAtom, deleteConfirmAtom, clickedAtom } from '../state/store'
-
 const titleAtom = atom('')
-const adjPointsAtom = atom({ x: 0, y: 0 })
 
 const DeleteConfirm = forwardRef(function DeleteConfirm({ onDelete }, deleteConfirmRef) {
-  const [points] = useAtom(pointsAtom)
-  const [updateId] = useAtom(updateIdAtom)
   const [title, setTitle] = useAtom(titleAtom)
-  const [, setDeleteConfirm] = useAtom(deleteConfirmAtom)
-  const [, setClicked] = useAtom(clickedAtom)
-  const [adjPoints, setAdjPoints] = useAtom(adjPointsAtom)
+  const { updateId, setDeleteConfirm, setClicked } = useAtomContext()
+  const { x, y } = useAdjustedPoints(deleteConfirmRef)
 
   useEffect(() => {
     chrome.bookmarks.get(updateId, (result) => {
       setTitle(result[0].title)
     })
-  }, [])
-
-  useLayoutEffect(() => {
-    const { x, y } = points
-    const { width, height } = deleteConfirmRef.current.getBoundingClientRect()
-    const { innerWidth, innerHeight } = window
-    const adjX = x + width > innerWidth ? innerWidth - width : x
-    const adjY = y + height > innerHeight ? innerHeight - height : y
-    setAdjPoints({ x: adjX, y: adjY })
   }, [])
 
   function handleDelete() {
@@ -37,12 +23,12 @@ const DeleteConfirm = forwardRef(function DeleteConfirm({ onDelete }, deleteConf
   }
 
   function handleClose() {
-    setClicked(false)
     setDeleteConfirm(false)
+    setClicked(false)
   }
 
   return (
-    <div ref={deleteConfirmRef} style={{ top: adjPoints.y, left: adjPoints.x }} className={s.wrapper}>
+    <div ref={deleteConfirmRef} style={{ top: y, left: x }} className={s.wrapper}>
       <div className={s.container}>
         <h3>Are you sure you want to delete the item</h3>
         <h3>{title} ?</h3>

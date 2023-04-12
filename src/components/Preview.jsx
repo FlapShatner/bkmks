@@ -1,16 +1,11 @@
 import { forwardRef, useEffect, useLayoutEffect } from 'react'
-import { atom, useAtom } from 'jotai'
+import useAdjustedPoints from '../hooks/usePoints'
 import s from './Preview.module.css'
-import { previewAtom, pointsAtom, updateIdAtom, currentAtom } from '../state/store'
 
-const adjPointsAtom = atom({ x: 0, y: 0 })
+import { useAtomContext } from '../state/atomContext'
 
 const Preview = forwardRef(function Preview(props, ref) {
-  const [preview, setPreview] = useAtom(previewAtom)
-  const [points] = useAtom(pointsAtom)
-  const [updateId] = useAtom(updateIdAtom)
-  const [current, setCurrent] = useAtom(currentAtom)
-  const [adjPoints, setAdjPoints] = useAtom(adjPointsAtom)
+  const { points, updateId, current, setCurrent, setPreview, preview } = useAtomContext()
 
   useEffect(() => {
     chrome.bookmarks.get(updateId, (bookmark) => {
@@ -43,15 +38,6 @@ const Preview = forwardRef(function Preview(props, ref) {
     if (current.url) {
       usePreview(current.url)
     }
-  }, [])
-
-  useLayoutEffect(() => {
-    const { x, y } = points
-    const { width, height } = ref.current.getBoundingClientRect()
-    const { innerWidth, innerHeight } = window
-    const adjX = x + width > innerWidth ? innerWidth - width : x
-    const adjY = y + height > innerHeight - 200 ? innerHeight - height - 250 : y
-    setAdjPoints({ x: adjX, y: adjY })
   }, [])
 
   let img = preview.images

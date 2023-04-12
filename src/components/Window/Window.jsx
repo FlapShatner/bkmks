@@ -1,43 +1,21 @@
 import { useEffect } from 'react'
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { useAtom } from 'jotai'
 import { useBookmarks } from '../../hooks/useBookmarks'
+import { useAtomContext } from '../../state/atomContext'
 
 import { TbCaretRight, TbLink } from 'react-icons/tb'
 import { IoReorderThree } from 'react-icons/io5'
 import { MdDragIndicator } from 'react-icons/md'
 import { FaFolderOpen, FaFolder, FaFolderPlus } from 'react-icons/fa'
 
-import {
-  folderIdAtom,
-  subTreeAtom,
-  parentsAtom,
-  clickedAtom,
-  updateIdAtom,
-  pointsAtom,
-  bmArrayAtom,
-  dragAtom,
-  isFolderAtom,
-  newFolderAtom,
-} from '../../state/store'
-
 import Item from '../Item'
 
 import s from './Window.module.css'
 
 function Window() {
-  const [, setFolderId] = useAtom(folderIdAtom)
-  const [subTree] = useAtom(subTreeAtom)
-  const [parents] = useAtom(parentsAtom)
-  const [, setClicked] = useAtom(clickedAtom)
-  const [, setIsFolder] = useAtom(isFolderAtom)
-  const [, setUpdateId] = useAtom(updateIdAtom)
-  const [, setPoints] = useAtom(pointsAtom)
-  const [drag, setDrag] = useAtom(dragAtom)
-  const [newFolder, setNewFolder] = useAtom(newFolderAtom)
-
-  const [bmArray, setBmArray] = useAtom(bmArrayAtom)
+  const { setFolderId, subTree, parents, setClicked, setUpdateId, setPoints, bmArray, setBmArray, drag, setDrag, setIsFolder, newFolder, setNewFolder } =
+    useAtomContext()
 
   const [bookmarks, bookmarksCb] = useBookmarks()
 

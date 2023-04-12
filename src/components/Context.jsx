@@ -1,37 +1,14 @@
-import { forwardRef, useEffect, useMemo, useLayoutEffect } from 'react'
+import { forwardRef, useEffect } from 'react'
+import { useAtomContext } from '../state/atomContext'
+import useAdjustedPoints from '../hooks/usePoints'
 import s from './Context.module.css'
 import { VscEye } from 'react-icons/vsc'
 import { TbEdit, TbTrash, TbExternalLink, TbCopy } from 'react-icons/tb'
 import { FaFolderOpen } from 'react-icons/fa'
 import { RiSpyLine } from 'react-icons/ri'
-import { atom, useAtom } from 'jotai'
-import {
-  pointsAtom,
-  folderIdAtom,
-  updateIdAtom,
-  deleteConfirmAtom,
-  renameAtom,
-  clickedAtom,
-  isFolderAtom,
-  editAtom,
-  currentAtom,
-  isPreviewAtom,
-} from '../state/store'
-
-const adjPointsAtom = atom({ x: 0, y: 0 })
 
 const Context = forwardRef(function Context({ onEdit }, ctxRef) {
-  const [points] = useAtom(pointsAtom)
-  const [, setRename] = useAtom(renameAtom)
-  const [deleteConfirm, setDeleteConfirm] = useAtom(deleteConfirmAtom)
-  const [, setFolderId] = useAtom(folderIdAtom)
-  const [updateId] = useAtom(updateIdAtom)
-  const [, setClicked] = useAtom(clickedAtom)
-  const [isFolder] = useAtom(isFolderAtom)
-  const [edit, setEdit] = useAtom(editAtom)
-  const [current, setCurrent] = useAtom(currentAtom)
-  const [, setIsPreview] = useAtom(isPreviewAtom)
-  const [adjPoints, setAdjPoints] = useAtom(adjPointsAtom)
+  const { setRename, setDeleteConfirm, setFolderId, updateId, setClicked, isFolder, edit, setEdit, current, setCurrent, setIsPreview } = useAtomContext()
 
   const prevTxt = 'Preview (beta)'
 
@@ -48,17 +25,11 @@ const Context = forwardRef(function Context({ onEdit }, ctxRef) {
     })
   }, [])
 
-  useLayoutEffect(() => {
-    const { x, y } = points
-    const { width, height } = ctxRef.current.getBoundingClientRect()
-    const { innerWidth, innerHeight } = window
-    const adjX = x + width > innerWidth ? innerWidth - width : x
-    const adjY = y + height > innerHeight ? innerHeight - height : y
-    setAdjPoints({ x: adjX, y: adjY })
-  }, [])
+  const { x, y } = useAdjustedPoints(ctxRef)
 
   function handleDelete() {
     setDeleteConfirm(true)
+    setClicked(false)
   }
 
   function handleRename() {
@@ -96,11 +67,9 @@ const Context = forwardRef(function Context({ onEdit }, ctxRef) {
     })
   }
 
-  const display = deleteConfirm ? 'none' : 'block'
-
   return (
-    <div ref={ctxRef} style={{ top: adjPoints.y, left: adjPoints.x }} className={s.wrapper}>
-      <div style={{ display: display }} className={s.container}>
+    <div ref={ctxRef} style={{ top: y, left: x }} className={s.wrapper}>
+      <div className={s.container}>
         {!edit ? (
           <div>
             {isFolder ? (
@@ -119,7 +88,11 @@ const Context = forwardRef(function Context({ onEdit }, ctxRef) {
             <span className={s.rule}></span>
 
             {isFolder ? (
-              <span onClick={() => setFolderId(updateId)}>
+              <span
+                onClick={() => {
+                  setClicked(false)
+                  setFolderId(updateId)
+                }}>
                 <FaFolderOpen /> Explore
               </span>
             ) : (
