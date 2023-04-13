@@ -22,7 +22,6 @@ const Preview = forwardRef(function Preview(props, ref) {
     if (data) {
       const preview = data.find((item) => item.id === current.id)
       setPreview(preview.url)
-      console.log(preview)
     }
   }, [data])
 

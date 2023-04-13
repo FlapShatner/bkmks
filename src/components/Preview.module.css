@@ -13,7 +13,8 @@
     flex-direction: column;
     padding: .5rem;
     border: 1px solid var(--clr-primary-hover);
-    max-width: 500px;
+    width: 450px;
+    min-height: 321px;
 }
 
 .title {
@@ -27,5 +28,10 @@
 }
 
 .container p {
-    margin-top: .5rem;
+    margin: .5rem 0;
+}
+
+.img {
+    width: 100%;
+    object-fit: scale-down;
 }
