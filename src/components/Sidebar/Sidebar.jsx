@@ -30,7 +30,6 @@ function Folder({ bookmark, onRename }) {
   function handleClick(e) {
     e.stopPropagation()
     setFolderId(id)
-    console.log(children)
   }
 
   function handleCaretClick(e) {

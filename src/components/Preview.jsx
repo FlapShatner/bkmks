@@ -1,11 +1,12 @@
-import { forwardRef, useEffect, useLayoutEffect } from 'react'
-import useAdjustedPoints from '../hooks/usePoints'
+import { forwardRef, useEffect } from 'react'
+import { useQuery } from 'react-query'
+import { getPreview } from '../utils/getPreview'
 import s from './Preview.module.css'
 
 import { useAtomContext } from '../state/atomContext'
 
 const Preview = forwardRef(function Preview(props, ref) {
-  const { points, updateId, current, setCurrent, setPreview, preview } = useAtomContext()
+  const { updateId, current, setCurrent, preview, setPreview, linkUrls } = useAtomContext()
 
   useEffect(() => {
     chrome.bookmarks.get(updateId, (bookmark) => {
@@ -15,30 +16,15 @@ const Preview = forwardRef(function Preview(props, ref) {
     })
   }, [])
 
+  const { data } = useQuery(['previews', linkUrls], () => getPreview(linkUrls))
+
   useEffect(() => {
-    setPreview({
-      title: 'Loading...',
-      description: 'Loading...',
-    })
-
-    async function usePreview(url) {
-      const server = 'https://link-preview-74vm.onrender.com'
-      const URI = encodeURI(url)
-
-      const response = await fetch(`${server}/preview?url=${URI}`, {
-        method: 'GET',
-        'content-type': 'application/json',
-      })
-      if (!response.ok) {
-        throw new Error('something went wrong')
-      }
-      const data = await response.json()
-      setPreview(data)
+    if (data) {
+      const preview = data.find((item) => item.id === current.id)
+      setPreview(preview.url)
+      console.log(preview)
     }
-    if (current.url) {
-      usePreview(current.url)
-    }
-  }, [])
+  }, [data])
 
   let img = preview.images
   if (preview.images && preview.images.length > 1) {

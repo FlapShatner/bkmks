@@ -21,6 +21,7 @@ import {
   newFolderAtom,
   previewAtom,
   isPreviewAtom,
+  linkUrlsAtom,
 } from './store'
 
 const AtomContext = createContext()
@@ -48,6 +49,7 @@ export const AtomProvider = ({ children }) => {
   const [newFolder, setNewFolder] = useAtom(newFolderAtom)
   const [preview, setPreview] = useAtom(previewAtom)
   const [isPreview, setIsPreview] = useAtom(isPreviewAtom)
+  const [linkUrls, setLinkUrls] = useAtom(linkUrlsAtom)
 
   return (
     <AtomContext.Provider
@@ -92,6 +94,8 @@ export const AtomProvider = ({ children }) => {
         setPreview,
         isPreview,
         setIsPreview,
+        linkUrls,
+        setLinkUrls,
       }}>
       {children}
     </AtomContext.Provider>

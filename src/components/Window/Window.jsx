@@ -1,4 +1,7 @@
 import { useEffect } from 'react'
+import { useQuery } from 'react-query'
+import { getPreview } from '../../utils/getPreview'
+
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useBookmarks } from '../../hooks/useBookmarks'
@@ -14,8 +17,25 @@ import Item from '../Item'
 import s from './Window.module.css'
 
 function Window() {
-  const { setFolderId, subTree, parents, setClicked, setUpdateId, setPoints, bmArray, setBmArray, drag, setDrag, setIsFolder, newFolder, setNewFolder } =
-    useAtomContext()
+  const {
+    folderId,
+    setFolderId,
+    subTree,
+    parents,
+    setClicked,
+    setUpdateId,
+    setPoints,
+    bmArray,
+    setBmArray,
+    drag,
+    setDrag,
+    setIsFolder,
+    newFolder,
+    setNewFolder,
+    linkUrls,
+    setLinkUrls,
+    setPreview,
+  } = useAtomContext()
 
   const [bookmarks, bookmarksCb] = useBookmarks()
 
@@ -34,6 +54,21 @@ function Window() {
       setBmArray(bmArray)
     }
   }, [children])
+
+  useEffect(() => {
+    if (children !== undefined) {
+      const noChildren = children.filter((child) => child.children === undefined)
+      const links = noChildren.map((child) => {
+        return { id: child.id, url: child.url }
+      })
+      setLinkUrls(links)
+    }
+  }, [children])
+
+  const { isLoading, error, data } = useQuery(['previews', linkUrls], () => getPreview(linkUrls), {
+    staleTime: 0,
+    enabled: linkUrls.length > 0,
+  })
 
   function onContext(e, id, folder) {
     e.preventDefault()

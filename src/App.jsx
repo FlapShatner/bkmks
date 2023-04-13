@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import s from './App.module.css'
+import { ReactQueryDevtools } from 'react-query/devtools'
 
 import { useClickOutside } from './hooks/useClickOutside'
 import { useBookmarks } from './hooks/useBookmarks'
@@ -20,7 +21,7 @@ import Preview from './components/Preview'
 import DeleteConfirm from './components/DeleteConfirm'
 
 function App() {
-  const { deleteConfirm, setDeleteConfirm, folderId, clicked, setClicked, newFolder, setNewFolder, isPreview, setIsPreview } = useAtomContext()
+  const { deleteConfirm, setDeleteConfirm, folderId, clicked, setClicked, newFolder, setNewFolder, isPreview, setIsPreview, setPreview } = useAtomContext()
 
   const ctxRef = useRef(null)
   const deleteConfirmRef = useRef(null)
@@ -33,7 +34,13 @@ function App() {
     setClicked(false)
   })
   useClickOutside(createFolderRef, () => setNewFolder(false))
-  useClickOutside(previewRef, () => setIsPreview(false))
+  useClickOutside(previewRef, () => {
+    setPreview({
+      title: 'Error',
+      description: 'Error',
+    })
+    setIsPreview(false)
+  })
 
   const [bookmarks, bookmarksCb] = useBookmarks()
   const findParents = useFindParents()
@@ -77,6 +84,7 @@ function App() {
       {deleteConfirm && <DeleteConfirm ref={deleteConfirmRef} onDelete={deleteItem} />}
       {newFolder && <CreateFolder ref={createFolderRef} />}
       {isPreview && <Preview ref={previewRef} />}
+      <ReactQueryDevtools initialIsOpen={false} />
     </div>
   )
 }
