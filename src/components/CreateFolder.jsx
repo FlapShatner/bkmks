@@ -1,8 +1,11 @@
+import { forwardRef } from 'react'
 import s from './CreateFolder.module.css'
 import { FaFolderPlus } from 'react-icons/fa'
-import { forwardRef } from 'react'
+import { useAtomContext } from '../state/atomContext'
 
 const CreateFolder = forwardRef(function CreateFolder(props, createFolderRef) {
+  const { folderId } = useAtomContext()
+
   return (
     <div ref={createFolderRef} className={s.wrapper}>
       <form>
@@ -11,8 +14,7 @@ const CreateFolder = forwardRef(function CreateFolder(props, createFolderRef) {
         </h3>
 
         <div>
-          <label htmlFor='parent'>Parent Folder</label>
-          <input type='text' name='parent' id='parent' />
+          <p>New folder in </p>
         </div>
         <div>
           <label htmlFor='title'>New Folder Name</label>
