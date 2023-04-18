@@ -84,7 +84,7 @@ function App() {
       {deleteConfirm && <DeleteConfirm ref={deleteConfirmRef} onDelete={deleteItem} />}
       {newFolder && <CreateFolder ref={createFolderRef} />}
       {isPreview && <Preview ref={previewRef} />}
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </div>
   )
 }

@@ -1,12 +1,12 @@
 import { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { getPreview } from '../../utils/getPreview'
-
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useBookmarks } from '../../hooks/useBookmarks'
 import { useAtomContext } from '../../state/atomContext'
-
+import { useCurrentFolder } from '../../hooks/useCurrentFolder'
+import { AiFillCaretLeft } from 'react-icons/ai'
 import { TbCaretRight, TbLink } from 'react-icons/tb'
 import { IoReorderThree } from 'react-icons/io5'
 import { MdDragIndicator } from 'react-icons/md'
@@ -38,6 +38,8 @@ function Window() {
   } = useAtomContext()
 
   const [bookmarks, bookmarksCb] = useBookmarks()
+
+  const currentFolder = useCurrentFolder()
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -103,6 +105,11 @@ function Window() {
     }
   }
 
+  function onBack() {
+    if (currentFolder.parentId === undefined) return
+    setFolderId(currentFolder.parentId)
+  }
+
   if (children == undefined) {
     return <div>Loading...</div>
   }
@@ -121,14 +128,19 @@ function Window() {
           ))}
         </div>
         <div className={s.titleBar}>
-          <h2
-            onContextMenu={(e) => {
-              const folder = true
-              onContext(e, id, folder)
-            }}>
-            <FaFolderOpen />
-            {title}
-          </h2>
+          <div className={s.topBar}>
+            <h2
+              onContextMenu={(e) => {
+                const folder = true
+                onContext(e, id, folder)
+              }}>
+              <FaFolderOpen />
+              {title}
+            </h2>
+            <button onClick={onBack}>
+              <AiFillCaretLeft /> Back
+            </button>
+          </div>
           <div className={s.titleBtns}>
             <button onClick={() => setNewFolder(!newFolder)}>
               <FaFolderPlus size={'1rem'} /> New Folder

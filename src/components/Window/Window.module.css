@@ -2,7 +2,6 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-
     height: 100dvh;
     height: 100vh;
     padding: 1rem 2rem;
@@ -118,11 +117,22 @@
     margin-top: 1.5rem;
 }
 
+.topBar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.topBar button {
+    position: relative;
+    bottom: .5rem;
+}
+
 .titleBtns {
-    margin-top: .5rem;
+    padding-top: .75rem;
     display: flex;
     justify-content: end;
     gap: 1rem;
+    border-top: 1px solid var(--clr-primary);
 }
 
 .titleBar button {

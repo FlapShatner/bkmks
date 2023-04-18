@@ -6,6 +6,7 @@
 
 .wrapper {
     position: absolute;
+    max-width: 30rem;
     top: 10rem;
     left: 3rem;
     background-color: var(--clr-dark-alt);

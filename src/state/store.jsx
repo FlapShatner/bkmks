@@ -21,3 +21,4 @@ export const newFolderAtom = atom(false) // new folder modal toggle
 export const previewAtom = atom({}) // currently previewed bookmark
 export const isPreviewAtom = atom(false) // preview modal toggle
 export const linkUrlsAtom = atom([]) // array of bookmark urls for current folder
+export const currentFolderAtom = atom('') // title of parent folder
